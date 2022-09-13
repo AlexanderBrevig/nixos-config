@@ -1,8 +1,18 @@
-theme = "grv"
+theme = "fleetish"
 
 [editor]
-idle-timeout = 50
+line-number = "relative"
+scrolloff = 5
+idle-timeout = 0
+auto-pairs = false
+color-modes = true
+cursorline = true
+true-color = true
+
+[editor.lsp]
+display-messages = true
 
 [editor.whitespace]
 render = "all"
 characters = { tab = "▸", newline = "◂" }
+
