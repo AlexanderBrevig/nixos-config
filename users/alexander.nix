@@ -3,7 +3,6 @@ let
   dirs = {
     defaults = ../defaults;
     colorschemes = ../colorschemes;
-    overlays = ../overlays;
   };
 
   configs = {
@@ -12,7 +11,7 @@ let
     git = import (dirs.defaults + /git) { inherit pkgs; };
     sway = import (dirs.defaults + /sway) { inherit pkgs; };
     kitty = import (dirs.defaults + /kitty);
-    firefox = import (dirs.defaults + /firefox) { inherit pkgs; };
+    googlechrome = import (dirs.defaults + /google-chrome);
     gpg = import (dirs.defaults + /gpg);
     gtk = import (dirs.defaults + /gtk) { inherit pkgs; };
     fzf = import (dirs.defaults + /fzf);
@@ -231,7 +230,7 @@ in
 
   programs.google-chrome = {
     enable = true;
-  } // configs.google-chrome;
+  } // configs.googlechrome;
 
   services.virtualisation.docker.enable = true;
 

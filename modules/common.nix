@@ -68,7 +68,7 @@ in
     subGidRanges = [ { count = 100000; startGid = 65536; } ];
   };
 
-  environment.sessionVariables { 
+  environment.sessionVariables = {
     NIXOS_OZONE_WL = "1";
   };
   environment.systemPackages = with pkgs; [
