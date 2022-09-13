@@ -50,10 +50,10 @@ in
     ];
     files = [
       "/etc/machine-id"
-      "/etc/ssh/ssh_host_rsa_key"
-      "/etc/ssh/ssh_host_rsa_key.pub"
-      "/etc/ssh/ssh_host_ed25519_key"
-      "/etc/ssh/ssh_host_ed25519_key.pub"
+      "/etc/ssh/id_rsa"
+      "/etc/ssh/id_rsa.pub"
+      "/etc/ssh/id_ed25519"
+      "/etc/ssh/id_ed25519.pub"
     ];
   };
 
@@ -80,7 +80,6 @@ in
   fonts.fonts = with pkgs; [
     jetbrains-mono
     font-awesome
-    apple-color-emoji
   ];
 
   programs.qt5ct.enable = true;
@@ -92,15 +91,8 @@ in
 
   services.openssh.enable = true;
 
-  virtualisation.podman = {
+  virtualisation.docker = {
     enable = true;
-    dockerSocket.enable = true;
-    # make a `docker` alias for podman
-    dockerCompat = true;
-    extraPackages = with pkgs; [
-      slirp4netns
-      fuse-overlayfs
-    ];
   };
 
   # sway/wayland

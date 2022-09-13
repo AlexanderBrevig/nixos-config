@@ -29,13 +29,12 @@
             allowUnfree = true;
             chromium.enableWideVine = true;
           };
-          #overlays = [
-          #  (import ./overlays)
-          #  (_final: _prev: {
-          #    unstable = pkgs-unstable;
-          #    edge = pkgs-edge;
-          #  })
-          #];
+          overlays = [
+            (_final: _prev: {
+              unstable = pkgs-unstable;
+              edge = pkgs-edge;
+            })
+          ];
         };
       };
 

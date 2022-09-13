@@ -27,7 +27,6 @@ in
   # fish shell
   programs.fish = {
     enable = true;
-    package = pkgs.unstable.fish;
   } // configs.fish;
 
   programs.gh = {
@@ -87,7 +86,7 @@ in
     nix-prefetch-github
     clipman
     gnome3.adwaita-icon-theme
-    edge.discord
+    discord
     unstable.spotify
     unstable.element-desktop
     unstable.wireshark
@@ -108,7 +107,6 @@ in
   } // configs.ssh;
 
   programs.git = {
-    package = pkgs.unstable.git;
     enable = true;
   } // configs.git;
 
@@ -129,8 +127,6 @@ in
     --enable-features=UseOzonePlatform
     --ozone-platform=wayland
   '';
-
-  xdg.configFile."tree-sitter/config.json".source = (dirs.defaults + /tree-sitter/config.json);
 
   ## Persistence config.
   # The root file-system is a tmpfs: volatile memory that is
@@ -225,14 +221,11 @@ in
 
   programs.kitty = {
     enable = true;
-    package = pkgs.unstable.kitty;
   } // configs.kitty;
 
   programs.google-chrome = {
     enable = true;
   } // configs.googlechrome;
-
-  services.virtualisation.docker.enable = true;
 
   services.gpg-agent = {
     enable = true;
