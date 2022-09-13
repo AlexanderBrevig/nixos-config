@@ -15,7 +15,7 @@ in
     ];
 
   networking = {
-    hostName = "abdev";
+    hostName = "nixos";
 
     useDHCP = false;
     interfaces.enp0s31f6.useDHCP = true;

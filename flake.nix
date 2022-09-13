@@ -63,11 +63,11 @@
     in
     {
       nixosConfigurations = {
-        abdev = nixpkgs.lib.nixosSystem {
+        nixos = nixpkgs.lib.nixosSystem {
           system = system;
           modules = [
             nixconfig
-            ./machines/abdev/configuration.nix
+            ./machines/nixos/configuration.nix
           ] ++ common-modules;
         };
       };

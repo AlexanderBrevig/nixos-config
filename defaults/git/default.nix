@@ -1,8 +1,8 @@
 { pkgs }:
 let
-  ssh-key-id = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIM7lG1J2TQNaqJLKqAzTQQ8yHBArm4o9k/eeaYLSrDuo";
+  ssh-key-id = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIIcrfLHg9Dcwygdjq+RPUgBfguEmmlJrtGIOJUUKtGNq";
   allowed_signers = pkgs.writeText "allowed_signers" ''
-    alexander@abdev ${ssh-key-id}
+    alexander@nixos ${ssh-key-id}
   '';
 in {
   aliases = {
@@ -48,15 +48,10 @@ in {
     pager.difftool = true;
   };
   ignores = [
-    "*.swp"
-    "*.swo"
-    ".projections.json"
-    "*.elixir_ls/"
-    "nohup.out"
-    "erlang_ls.config"
+    ".gitlint"
   ];
-  userName = "Michael Davis";
-  userEmail = "mcarsondavis@gmail.com";
+  userName = "Alexander Brevig";
+  userEmail = "alexanderbrevig@gmail.com";
   signing = {
     key = ssh-key-id;
     signByDefault = true;
