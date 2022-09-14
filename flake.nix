@@ -1,74 +1,80 @@
+# flake.nix --- heavily inspired by hlissner/dotfiles
+#
+# Author:  Alexander Brevig <alexanderbrevig@gmail.com>
+# URL:     https://github.com/alexanderbrevig/dotfiles
+# License: MIT
+#
+# Welcome to ground zero. Where the whole flake gets set up and all its modules
+# are loaded.
+
 {
-  description = "@alexanderbrevig's machine configurations";
+  description = "A grossly incandescent nixos config.";
 
-  nixConfig.extra-experimental-features = "nix-command flakes";
+  inputs = 
+    {
+      # Core dependencies.
+      nixpkgs.url = "nixpkgs/nixos-unstable";             # primary nixpkgs
+      nixpkgs-unstable.url = "nixpkgs/nixpkgs-unstable";  # for packages on the edge
+      home-manager.url = "github:rycee/home-manager/master";
+      home-manager.inputs.nixpkgs.follows = "nixpkgs";
+      agenix.url = "github:ryantm/agenix";
+      agenix.inputs.nixpkgs.follows = "nixpkgs";
 
-  inputs = {
-    nixpkgs.url = "github:nixos/nixpkgs/nixos-22.05";
-    unstable.url = "github:nixos/nixpkgs/nixos-unstable";
-    bleeding-edge.url = "github:nixos/nixpkgs/master";
+      # Extras
+      nixos-hardware.url = "github:nixos/nixos-hardware";
+    };
 
-    home-manager.url = "github:nix-community/home-manager/release-22.05";
-    home-manager.inputs.nixpkgs.follows = "nixpkgs";
-
-    impermanence.url = "github:nix-community/impermanence/master";
-  };
-
-  outputs = inputs@{ nixpkgs, home-manager, impermanence, ... }:
+  outputs = inputs @ { self, nixpkgs, nixpkgs-unstable, ... }:
     let
+      inherit (lib.my) mapModules mapModulesRec mapHosts;
+
       system = "x86_64-linux";
 
-      pkgs-unstable = import inputs.unstable { config.allowUnfree = true; system = system; };
-      pkgs-edge = import inputs.bleeding-edge { config.allowUnfree = true; system = system; };
-
-      home-manager-impermanence = impermanence + "/home-manager.nix";
-
-      nixconfig = {
-        nixpkgs = {
-          config = {
-            allowUnfree = true;
-            chromium.enableWideVine = true;
-          };
-          overlays = [
-            (_final: _prev: {
-              unstable = pkgs-unstable;
-              edge = pkgs-edge;
-            })
-          ];
-        };
+      mkPkgs = pkgs: extraOverlays: import pkgs {
+        inherit system;
+        config.allowUnfree = true;  # forgive me Stallman senpai
+        #overlays = extraOverlays ++ (lib.attrValues self.overlays);
       };
+      pkgs  = mkPkgs nixpkgs [ self.overlay ];
+      pkgs' = mkPkgs nixpkgs-unstable [];
 
-      common-modules = [
-        # add flakes support
-        {
-          nix = {
-            package = pkgs-edge.nix;
-            extraOptions = ''
-              experimental-features = nix-command flakes
-            '';
-            trustedUsers = [ "root" "alexander" ];
-          };
-        }
-        home-manager.nixosModules.home-manager
-        impermanence.nixosModules.impermanence
-        {
-          home-manager.useGlobalPkgs = true;
-          home-manager.useUserPackages = true;
-          home-manager.users.root = import ./users/root.nix home-manager-impermanence;
-          home-manager.users.alexander = import ./users/alexander.nix home-manager-impermanence;
-        }
-        ./modules/common.nix
-      ];
-    in
-    {
-      nixosConfigurations = {
-        nixos = nixpkgs.lib.nixosSystem {
-          system = system;
-          modules = [
-            nixconfig
-            ./machines/nixos/configuration.nix
-          ] ++ common-modules;
+      lib = nixpkgs.lib.extend
+        (self: super: { my = import ./lib { inherit pkgs inputs; lib = self; }; });
+    in {
+      lib = lib.my;
+
+      overlay =
+        final: prev: {
+          unstable = pkgs';
+          my = self.packages."${system}";
         };
+
+      #overlays =
+      #  mapModules ./overlays import;
+
+      #packages."${system}" =
+      #  mapModules ./packages (p: pkgs.callPackage p {});
+
+      nixosModules =
+        { dotfiles = import ./.; } // mapModulesRec ./modules import;
+
+      nixosConfigurations =
+        mapHosts ./hosts {};
+
+      devShell."${system}" =
+        import ./shell.nix { inherit pkgs; };
+
+      templates = {
+        full = {
+          path = ./.;
+          description = "A grossly incandescent nixos config";
+        };
+      } // import ./templates;
+      defaultTemplate = self.templates.full;
+
+      defaultApp."${system}" = {
+        type = "app";
+        program = ./bin/hey;
       };
     };
 }
