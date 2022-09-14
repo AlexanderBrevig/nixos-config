@@ -1,3 +1,0 @@
-{
-  enableFishIntegration = true;
-}
