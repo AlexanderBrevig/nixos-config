@@ -40,6 +40,8 @@
 [url "git@github.com:AlexanderBrevig/"]
     insteadOf = gh:/
 [url "git@bitbucket.org:enturas/"]
+    insteadOf = enturas:/
+[url "git@github.com:entur/"]
     insteadOf = entur:/
 [url "https://gitlab.com/"]
     insteadOf = gl:
