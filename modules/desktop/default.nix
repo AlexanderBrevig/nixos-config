@@ -15,11 +15,18 @@ in {
     kubernetes-helm
 
     # Quality of life
+    fzf
     bat
     exa
     peco
     jq
     yq
+    
+    # Tools and utils
+    bitwarden
+    bitwarden-cli
+    taskwarrior
+    xdg-utils
     
     # Comms and media
     slack
@@ -32,6 +39,7 @@ in {
     enableGhostscriptFonts = true;
     fonts = with pkgs; [
       jetbrains-mono
+      (nerdfonts.override { fonts = [ "JetBrainsMono" "FiraCode" ]; })
       dejavu_fonts
       symbola
     ];

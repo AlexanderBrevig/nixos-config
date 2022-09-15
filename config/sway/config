@@ -30,6 +30,9 @@ input type:keyboard xkb_capslock disable
 
     # Start your launcher
     bindsym $mod+d exec $menu
+    
+    # Take screenshots
+    bindsym Print exec grim -g "$(slurp -d)" - | wl-copy
 
     floating_modifier $mod normal
 
@@ -152,3 +155,7 @@ bar {
         inactive_workspace #32323200 #32323200 #5c5c5c
     }
 }
+
+# EXEC
+exec dbus-sway-environment
+exec configure-gtk

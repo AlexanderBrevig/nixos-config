@@ -11,6 +11,7 @@
       sway.enable = true;
       term = {
         default = "kitty";
+        shell = "fish";
       };
       vm = {
         qemu.enable = true;
@@ -22,12 +23,14 @@
       python.enable = true;
     };
     editors = {
-      default = "nvim";
+      default = "hx";
     };
     shell = {
       direnv.enable = true;
       git.enable    = true;
       gnupg.enable  = true;
+      fish.enable   = true;
+      starship.enable = true;
     };
     services = {
       ssh.enable = true;
@@ -38,13 +41,10 @@
 
   ## Local config
   programs.ssh.startAgent = true;
-  programs.fish = {
-    enable = true;
+  services = {
+    openssh.startWhenNeeded = true;
+    getty.autologinUser = config.user.name;
   };
-  programs.starship = {
-    enable = true;
-  };
-  services.openssh.startWhenNeeded = true;
 
   networking.networkmanager.enable = true;
 }

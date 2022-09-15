@@ -90,5 +90,19 @@ with lib.my;
     environment.extraInit =
       concatStringsSep "\n"
         (mapAttrsToList (n: v: "export ${n}=\"${v}\"") config.env);
+    # auto start sway
+    environment.loginShellInit = ''
+      [[ "$(tty)" == /dev/tty? ]] && sudo /run/current-system/sw/bin/lock this 
+      [[ "$(tty)" == /dev/tty1 ]] && sway
+    '';
+    
+    # mime
+    xdg.mime.defaultApplications = {
+      "text/html" = "google-chrome.desktop";
+      "x-scheme-handler/http" = "google-chrome.desktop";
+      "x-scheme-handler/https" = "google-chrome.desktop";
+      "x-scheme-handler/about" = "google-chrome.desktop";
+      "x-scheme-handler/unknown" = "google-chrome.desktop";
+    };
   };
 }
