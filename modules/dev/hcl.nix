@@ -1,15 +1,11 @@
-# modules/dev/clojure.nix --- https://clojure.org/
-#
-# I don't use clojure... yet.
-
 { config, options, lib, pkgs, my, ... }:
 
 with lib;
 with lib.my;
 let devCfg = config.modules.dev;
-    cfg = devCfg.clojure;
+    cfg = devCfg.hcl;
 in {
-  options.modules.dev.clojure = {
+  options.modules.dev.hcl = {
     enable = mkBoolOpt false;
     xdg.enable = mkBoolOpt devCfg.xdg.enable;
   };
@@ -17,10 +13,7 @@ in {
   config = mkMerge [
     (mkIf cfg.enable {
       user.packages = with pkgs; [
-        clojure
-        clojure-lsp
-        joker
-        leiningen
+        terraform-ls
       ];
     })
 

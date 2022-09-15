@@ -20,6 +20,8 @@ in {
     (mkIf cfg.enable {
       user.packages = with pkgs; [
         python310
+        python310Packages.python-lsp-black
+        python310Packages.python-lsp-server
         python310Packages.pip
         python310Packages.black
         python310Packages.setuptools
