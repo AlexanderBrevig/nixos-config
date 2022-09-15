@@ -11,7 +11,7 @@ alias ku="kubectl config unset current-context"
 
 alias kx="kubectx"
 
-alias la="exa -la"
+alias la="exa --sort=type --icons --long --all --links --git"
 
 alias ls="exa --sort=type --icons"
 

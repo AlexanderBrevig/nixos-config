@@ -3,7 +3,8 @@
 with lib;
 with lib.my;
 let cfg = config.modules.desktop;
-in {
+in
+{
   config.user.packages = with pkgs; [
     google-chrome
 
@@ -21,18 +22,27 @@ in {
     peco
     jq
     yq
-    
+
     # Tools and utils
     bitwarden
     bitwarden-cli
     taskwarrior
     xdg-utils
-    
+    aspell
+    aspellDicts.en
+    aspellDicts.nb
+
     # Comms and media
     slack
     element-desktop
     spotify
   ];
+
+  config = {
+    home.configFile = {
+      ".aspell.conf".text = "data-dir ${pkgs.aspell}/lib/aspell";
+    };
+  };
 
   config.fonts = {
     fontDir.enable = true;
