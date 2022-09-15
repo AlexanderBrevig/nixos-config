@@ -18,9 +18,22 @@
       };
     };
     dev = {
-      node.enable = true;
+      nix.enable = true;
       rust.enable = true;
+      cc.enable = true;
+      go.enable = true;
+      common-lisp.enable = true;
+      haskell.enable = true;
+      hcl.enable = true;
+      node.enable = true;
+      typescript.enable = true;
       python.enable = true;
+      scala.enable = true;
+      kotlin.enable = true;
+      java.enable = true;
+      verilog.enable = true;
+      shell.enable = true;
+      toml.enable = true;
     };
     editors = {
       default = "hx";
