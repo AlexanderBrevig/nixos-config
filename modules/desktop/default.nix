@@ -1,4 +1,4 @@
-{ config, options, lib, pkgs, ... }:
+  { config, options, lib, pkgs, ... }:
 
 with lib;
 with lib.my;
@@ -6,6 +6,25 @@ let cfg = config.modules.desktop;
 in {
   config.user.packages = with pkgs; [
     google-chrome
+
+    # DevOps
+    kubectl
+    kubectx
+    google-cloud-sdk
+    cloud-sql-proxy
+    kubernetes-helm
+
+    # Quality of life
+    bat
+    exa
+    peco
+    jq
+    yq
+    
+    # Comms and media
+    slack
+    element-desktop
+    spotify
   ];
 
   config.fonts = {

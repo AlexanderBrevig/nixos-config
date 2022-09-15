@@ -66,6 +66,7 @@ in
 				slurp # screenshot functionality
 				wl-clipboard # wl-copy and wl-paste for copy/paste from stdin / stdout
 				bemenu # wayland clone of dmenu
+				rofi
 				mako # notification system developed by swaywm maintainer
 		];
 
@@ -98,5 +99,9 @@ in
 			wrapperFeatures.gtk = true;
 		};
 		programs.light.enable = true;
+		
+		home.configFile = {
+			"sway/config".source = "${configDir}/sway/config";
+		};
 	};
 }
