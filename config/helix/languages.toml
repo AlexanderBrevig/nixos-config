@@ -6,3 +6,8 @@ language-server = { command = "svls" }
 name = "scheme"
 file-types = [ "lisp", "cl", "el", "mud", "asd" ]
 language-server = { command = "cl-lsp", args = [ "stdio" ] }
+
+[[language]]
+name = "markdown"
+roots = [".marksman.toml"]
+language-server = { command = "marksman", args = ["server"] }
