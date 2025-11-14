@@ -1,0 +1,398 @@
+# Fish shell configuration
+{ config, pkgs, lib, ... }:
+
+{
+  programs.fish = {
+    enable = true;
+    
+    # Shell aliases - using lib.mkMerge for better organization
+    shellAliases = lib.mkMerge [
+      # Modern replacements
+      {
+        cat = "bat";
+        ls = "eza --icons";
+        ll = "eza -la --icons --git";
+        la = "eza -la --icons";
+        tree = "eza --tree --icons";
+        find = "fd";
+        grep = "rg";
+        top = "btop";
+        htop = "btop";
+      }
+      
+      # Git shortcuts (only if git is enabled)
+      (lib.mkIf config.programs.git.enable {
+        g = "git";
+        gs = "git status";
+        ga = "git add";
+        gc = "git commit";
+        gca = "git commit --amend";
+        gp = "git push";
+        gl = "git pull";
+        gd = "git diff";
+        gco = "git checkout";
+        gb = "git branch";
+        glog = "git log --oneline --graph --all";
+      })
+      
+      # System shortcuts
+      {
+        rebuild = "sudo nixos-rebuild switch --flake .";
+        test-rebuild = "sudo nixos-rebuild test --flake .";
+        update = "nix flake update";
+        clean = "sudo nix-collect-garbage -d";
+        
+        # Development
+        j = "just";
+        
+        # Navigation with zoxide
+        cd = "z";
+        
+        # Quick navigation
+        ".." = "cd ..";
+        "..." = "cd ../..";
+        "...." = "cd ../../..";
+        
+        # Safety nets
+        rm = "rm -i";
+        cp = "cp -i";
+        mv = "mv -i";
+        
+        # Docker shortcuts
+        d = "docker";
+        dc = "docker-compose";
+        dps = "docker ps";
+        dpa = "docker ps -a";
+        di = "docker images";
+        dl = "docker logs";
+        dex = "docker exec -it";
+        drm = "docker rm";
+        drmi = "docker rmi";
+      }
+    ];
+    
+    # Fish configuration
+    interactiveShellInit = ''
+      # Initialize integrations (only if enabled)
+      ${lib.optionalString config.programs.zoxide.enable "zoxide init fish | source"}
+      ${lib.optionalString config.programs.starship.enable "starship init fish | source"}
+      
+      # Set default editor based on what's available
+      ${if config.programs.helix.enable then "set -gx EDITOR helix"
+        else "set -gx EDITOR nano"}
+      
+      # Development environment variables
+      set -gx RUST_BACKTRACE 1
+      set -gx CARGO_TARGET_DIR ~/.cargo/target
+      
+      # Go environment
+      set -gx GOPATH ~/.go
+      set -gx PATH $GOPATH/bin $PATH
+      
+      # Java environment  
+      set -gx JAVA_HOME ${pkgs.openjdk21}
+      
+      # Flutter environment
+      set -gx CHROME_EXECUTABLE ${pkgs.google-chrome}/bin/google-chrome-stable
+      
+      # Nix-specific paths
+      set -gx PATH ~/.nix-profile/bin $PATH
+      
+      # Better colors for ls/eza
+      set -gx LS_COLORS (${pkgs.vivid}/bin/vivid generate snazzy)
+      
+      # FZF configuration
+      set -gx FZF_DEFAULT_COMMAND "${pkgs.fd}/bin/fd --type f --hidden --follow --exclude .git"
+      set -gx FZF_CTRL_T_COMMAND "$FZF_DEFAULT_COMMAND"
+      set -gx FZF_ALT_C_COMMAND "${pkgs.fd}/bin/fd --type d --hidden --follow --exclude .git"
+      
+      # Better history search with fzf
+      bind \cr 'history | ${pkgs.fzf}/bin/fzf | read -l result; and commandline -- $result'
+      
+      # Vi mode indicators (optional)
+      function fish_mode_prompt
+        switch $fish_bind_mode
+          case default
+            set_color --bold red
+            echo '[N] '
+          case insert
+            set_color --bold green
+            echo '[I] '
+          case replace_one
+            set_color --bold yellow
+            echo '[R] '
+          case visual
+            set_color --bold brmagenta
+            echo '[V] '
+        end
+        set_color normal
+      end
+      
+      # Greeting customization
+      set fish_greeting
+    '';
+    
+    # Fish functions
+    functions = {
+      # Quick project navigation
+      proj = {
+        description = "Navigate to projects directory";
+        body = "cd ~/projects; and ${pkgs.eza}/bin/eza --icons";
+      };
+      
+      # Create and enter directory
+      mkcd = {
+        description = "Create directory and cd into it";
+        body = ''
+          if test -z "$argv[1]"
+            echo "Usage: mkcd <directory>"
+            return 1
+          end
+          mkdir -p "$argv[1]" && cd "$argv[1]"
+        '';
+      };
+      
+      # Git clone and cd
+      gcl = {
+        description = "Git clone and cd into repository";
+        body = ''
+          if test -z "$argv[1]"
+            echo "Usage: gcl <repository-url>"
+            return 1
+          end
+          git clone "$argv[1]"
+          set repo_name (basename "$argv[1]" .git)
+          if test -d "$repo_name"
+            cd "$repo_name"
+          end
+        '';
+      };
+      
+      # Quick file finder
+      ff = {
+        description = "Find and edit file with fzf";
+        body = ''
+          set file (${pkgs.fd}/bin/fd --type f --hidden --follow --exclude .git | ${pkgs.fzf}/bin/fzf)
+          if test -n "$file"
+            $EDITOR "$file"
+          end
+        '';
+      };
+      
+      # Quick directory jump
+      fcd = {
+        description = "Find and change to directory with fzf";
+        body = ''
+          set dir (${pkgs.fd}/bin/fd --type d --hidden --follow --exclude .git | ${pkgs.fzf}/bin/fzf)
+          if test -n "$dir"
+            cd "$dir"
+          end
+        '';
+      };
+      
+      # Extract archives
+      extract = {
+        description = "Extract various archive formats";
+        body = ''
+          if test -z "$argv[1]"
+            echo "Usage: extract <archive>"
+            return 1
+          end
+          
+          switch "$argv[1]"
+            case "*.tar.bz2"
+              tar xjf "$argv[1]"
+            case "*.tar.gz"
+              tar xzf "$argv[1]"  
+            case "*.bz2"
+              bunzip2 "$argv[1]"
+            case "*.rar"
+              ${pkgs.unrar}/bin/unrar x "$argv[1]"
+            case "*.gz"
+              gunzip "$argv[1]"
+            case "*.tar"
+              tar xf "$argv[1]"
+            case "*.tbz2"
+              tar xjf "$argv[1]"
+            case "*.tgz"
+              tar xzf "$argv[1]"
+            case "*.zip"
+              ${pkgs.unzip}/bin/unzip "$argv[1]"
+            case "*.Z"
+              uncompress "$argv[1]"
+            case "*.7z"
+              ${pkgs.p7zip}/bin/7z x "$argv[1]"
+            case "*"
+              echo "Don't know how to extract '$argv[1]'"
+          end
+        '';
+      };
+      
+      # NixOS specific helpers
+      nix-search = {
+        description = "Search for packages in nixpkgs";
+        body = "nix search nixpkgs $argv";
+      };
+      
+      nix-shell-run = {
+        description = "Run command in nix shell with packages";
+        body = ''
+          if test (count $argv) -lt 2
+            echo "Usage: nix-shell-run <package> <command>"
+            return 1
+          end
+          nix shell nixpkgs#$argv[1] -c $argv[2..-1]
+        '';
+      };
+      
+      # Project environment helpers
+      dev = {
+        description = "Enter project development environment";
+        body = ''
+          if test -f flake.nix
+            echo "🚀 Entering development environment..."
+            nix develop
+          else if test -f shell.nix
+            echo "🚀 Entering nix-shell environment..."
+            nix-shell
+          else if test -f .envrc
+            echo "🚀 Direnv detected, allowing..."
+            direnv allow
+          else
+            echo "❌ No development environment found (flake.nix, shell.nix, or .envrc)"
+            echo "💡 Run 'init-project <language>' to create one"
+          end
+        '';
+      };
+      
+      init-project = {
+        description = "Initialize project with development environment";
+        body = ''
+          if test -z "$argv[1]"
+            echo "Usage: init-project <rust|go|java|python|flutter|ocaml|node|cpp>"
+            return 1
+          end
+          
+          set template_dir ~/.config/nixos/templates
+          
+          if not test -f flake.nix
+            cp $template_dir/flake.nix .
+            echo "📝 Created flake.nix - edit it to uncomment your language stack"
+            echo "🚀 Then run 'dev' to enter the environment"
+          else
+            echo "⚠️  flake.nix already exists"
+          end
+        '';
+      };
+      
+      quick-env = {
+        description = "Quickly enter environment with specific packages";
+        body = ''
+          if test -z "$argv[1]"
+            echo "Usage: quick-env <package1> [package2] ..."
+            echo "Example: quick-env nodejs python3 go"
+            return 1
+          end
+          
+          set packages
+          for arg in $argv
+            set packages $packages nixpkgs#$arg
+          end
+          
+          echo "🚀 Starting shell with: $argv"
+          nix shell $packages
+        '';
+      };
+      
+      # Docker helper functions
+      docker-clean = {
+        description = "Clean up Docker containers, images, and volumes";
+        body = ''
+          echo "Cleaning up Docker resources..."
+          docker container prune -f
+          docker image prune -f
+          docker volume prune -f
+          docker network prune -f
+          echo "Docker cleanup complete!"
+        '';
+      };
+      
+      docker-enter = {
+        description = "Enter a running Docker container with bash/sh";
+        body = ''
+          if test -z "$argv[1]"
+            echo "Usage: docker-enter <container-name-or-id>"
+            return 1
+          end
+          
+          # Try bash first, fall back to sh
+          if docker exec -it "$argv[1]" bash 2>/dev/null
+            # bash worked
+          else
+            docker exec -it "$argv[1]" sh
+          end
+        '';
+      };
+      
+      docker-logs-follow = {
+        description = "Follow logs for a Docker container";
+        body = ''
+          if test -z "$argv[1]"
+            echo "Usage: docker-logs-follow <container-name-or-id>"
+            return 1
+          end
+          docker logs -f "$argv[1]"
+        '';
+      };
+      
+      docker-stop-all = {
+        description = "Stop all running Docker containers";
+        body = ''
+          set running (docker ps -q)
+          if test -n "$running"
+            echo "Stopping all running containers..."
+            docker stop $running
+          else
+            echo "No running containers to stop"
+          end
+        '';
+      };
+    };
+  };
+
+  # Related programs that work well with fish
+  programs.zoxide = {
+    enable = true;
+    enableFishIntegration = true;
+  };
+  
+  # FZF integration for better fuzzy finding
+  programs.fzf = {
+    enable = true;
+    enableFishIntegration = true;
+    defaultCommand = "${pkgs.fd}/bin/fd --type f --hidden --follow --exclude .git";
+    fileWidgetCommand = "${pkgs.fd}/bin/fd --type f --hidden --follow --exclude .git";
+    changeDirWidgetCommand = "${pkgs.fd}/bin/fd --type d --hidden --follow --exclude .git";
+    
+    colors = {
+      "bg+" = "#363a4f";
+      "bg" = "#24273a";
+      "spinner" = "#f4dbd6";
+      "hl" = "#ed8796";
+      "fg" = "#cad3f5";
+      "header" = "#ed8796";
+      "info" = "#c6a0f6";
+      "pointer" = "#f4dbd6";
+      "marker" = "#f4dbd6";
+      "fg+" = "#cad3f5";
+      "prompt" = "#c6a0f6";
+      "hl+" = "#ed8796";
+    };
+  };
+  
+  # Direnv for automatic environment loading
+  programs.direnv = {
+    enable = true;
+    nix-direnv.enable = true;
+  };
+}

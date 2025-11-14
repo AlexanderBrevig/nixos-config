@@ -1,80 +1,86 @@
-# flake.nix --- heavily inspired by hlissner/dotfiles
-#
-# Author:  Alexander Brevig <alexanderbrevig@gmail.com>
-# URL:     https://github.com/alexanderbrevig/dotfiles
-# License: MIT
-#
-# Welcome to ground zero. Where the whole flake gets set up and all its modules
-# are loaded.
-
 {
-  description = "A grossly incandescent nixos config.";
+  description = "NixOS Configuration with Home Manager";
 
-  inputs = 
-    {
-      # Core dependencies.
-      nixpkgs.url = "nixpkgs/nixos-unstable";             # primary nixpkgs
-      nixpkgs-unstable.url = "nixpkgs/nixpkgs-unstable";  # for packages on the edge
-      home-manager.url = "github:rycee/home-manager/master";
-      home-manager.inputs.nixpkgs.follows = "nixpkgs";
-      agenix.url = "github:ryantm/agenix";
-      agenix.inputs.nixpkgs.follows = "nixpkgs";
-
-      # Extras
-      nixos-hardware.url = "github:nixos/nixos-hardware";
+  inputs = {
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
+    
+    home-manager = {
+      url = "github:nix-community/home-manager";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    
+    helix = {
+      url = "github:helix-editor/helix";
+      inputs.nixpkgs.follows = "nixpkgs";
     };
 
-  outputs = inputs @ { self, nixpkgs, nixpkgs-unstable, ... }:
+    # Hyprland for latest Wayland compositor
+    hyprland.url = "github:hyprwm/Hyprland";
+  };
+
+  outputs = { self, nixpkgs, home-manager, helix, hyprland, ... }@inputs:
     let
-      inherit (lib.my) mapModules mapModulesRec mapHosts;
-
       system = "x86_64-linux";
+      pkgs = nixpkgs.legacyPackages.${system};
+    in
+    {
+      # NixOS Configurations
+      nixosConfigurations = {
+        # Laptop configuration
+        ablaptop = nixpkgs.lib.nixosSystem {
+          inherit system;
+          specialArgs = { inherit inputs; };
+          modules = [
+            ./hosts/ablaptop.nix
+            ./modules/shared.nix
+            ./modules/hyprland.nix
+            
+            # Home Manager as NixOS module
+            home-manager.nixosModules.home-manager
+            {
+              home-manager.useGlobalPkgs = true;
+              home-manager.useUserPackages = true;
+              home-manager.extraSpecialArgs = { inherit inputs; };
+              home-manager.users.ab = import ./home/home.nix;
+            }
+          ];
+        };
 
-      mkPkgs = pkgs: extraOverlays: import pkgs {
-        inherit system;
-        config.allowUnfree = true;  # forgive me Stallman senpai
-        #overlays = extraOverlays ++ (lib.attrValues self.overlays);
+        # Desktop workstation configuration
+        abstation = nixpkgs.lib.nixosSystem {
+          inherit system;
+          specialArgs = { inherit inputs; };
+          modules = [
+            ./hosts/abstation.nix
+            ./modules/shared.nix
+            ./modules/hyprland.nix
+            
+            # Home Manager as NixOS module
+            home-manager.nixosModules.home-manager
+            {
+              home-manager.useGlobalPkgs = true;
+              home-manager.useUserPackages = true;
+              home-manager.extraSpecialArgs = { inherit inputs; };
+              home-manager.users.ab = import ./home/home.nix;
+            }
+          ];
+        };
       };
-      pkgs  = mkPkgs nixpkgs [ self.overlay ];
-      pkgs' = mkPkgs nixpkgs-unstable [];
 
-      lib = nixpkgs.lib.extend
-        (self: super: { my = import ./lib { inherit pkgs inputs; lib = self; }; });
-    in {
-      lib = lib.my;
-
-      overlay =
-        final: prev: {
-          unstable = pkgs';
-          my = self.packages."${system}";
-        };
-
-      #overlays =
-      #  mapModules ./overlays import;
-
-      #packages."${system}" =
-      #  mapModules ./packages (p: pkgs.callPackage p {});
-
-      nixosModules =
-        { dotfiles = import ./.; } // mapModulesRec ./modules import;
-
-      nixosConfigurations =
-        mapHosts ./hosts {};
-
-      devShell."${system}" =
-        import ./shell.nix { inherit pkgs; };
-
-      templates = {
-        full = {
-          path = ./.;
-          description = "A grossly incandescent nixos config";
-        };
-      } // import ./templates;
-      defaultTemplate = self.templates.full;
-
-      defaultApp."${system}" = {
-        type = "app";
-        program = ./bin/hey;
+      # Development shell for easy system management
+      devShells.${system}.default = pkgs.mkShell {
+        buildInputs = with pkgs; [
+          git
+          nixos-rebuild
+          home-manager
+        ];
+        
+        shellHook = ''
+          echo "🚀 NixOS Configuration Development Shell"
+          echo "Available commands:"
+          echo "  nixos-rebuild switch --flake .#hostname"
+          echo "  home-manager switch --flake .#ab@hostname"
+        '';
       };
     };
 }
