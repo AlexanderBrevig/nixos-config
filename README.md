@@ -163,7 +163,37 @@ fileSystems."/boot" = {
 **For Desktop (`hosts/abstation.nix`):**
 Update the same sections with your desktop's UUIDs.
 
-### Step 8: Update Personal Information
+### Step 8: Configure SSH Keys (CRITICAL)
+
+**⚠️ IMPORTANT:** SSH is configured with password authentication disabled. You MUST add your SSH public key before installation, or you will be locked out of SSH access.
+
+Edit `modules/shared.nix` and uncomment/update lines 108-110:
+
+```nix
+services.openssh = {
+  enable = true;
+  settings = {
+    PasswordAuthentication = false;  # Only allow key-based auth
+    # ... other settings ...
+  };
+  # UNCOMMENT and add your public key:
+  users.ab.openssh.authorizedKeys.keys = [
+    "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAI... your-actual-public-key-here"
+  ];
+};
+```
+
+To get your SSH public key:
+```bash
+# If you already have a key:
+cat ~/.ssh/id_ed25519.pub
+
+# Or generate a new one:
+ssh-keygen -t ed25519 -C "ab@yourdomain.com"
+cat ~/.ssh/id_ed25519.pub
+```
+
+### Step 9: Update Personal Information
 
 Edit `home/home.nix` to set your personal information:
 
@@ -177,7 +207,7 @@ programs.git = {
 };
 ```
 
-### Step 9: Install NixOS
+### Step 10: Install NixOS
 
 ```bash
 # Install NixOS with your configuration

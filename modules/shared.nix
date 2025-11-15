@@ -52,13 +52,15 @@
   users.users.ab = {
     isNormalUser = true;
     description = "ab";
-    extraGroups = [ 
-      "networkmanager" 
-      "wheel" 
-      "audio" 
-      "video" 
+    extraGroups = [
+      "networkmanager"
+      "wheel"
+      "audio"
+      "video"
       "docker"
       "libvirtd"
+      "input"    # For Hyprland input devices
+      "render"   # For Hyprland GPU access
     ];
     shell = pkgs.fish;
   };
@@ -109,18 +111,7 @@
       #   "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAI... your-key-here"
       # ];
     };
-    
-    # Docker container runtime
-    docker = {
-      enable = true;
-      enableOnBoot = true;
-      # Automatically prune old containers, images, and volumes
-      autoPrune = {
-        enable = true;
-        dates = "weekly";
-      };
-    };
-    
+
     # Automatic garbage collection
     nix = {
       gc = {
@@ -138,51 +129,57 @@
     
     # Power management
     power-profiles-daemon.enable = true;
-    
+
     # Location services for time zone detection
     geoclue2.enable = true;
+
+    # Fail2ban for SSH brute-force protection
+    fail2ban = {
+      enable = true;
+      maxretry = 5;
+      bantime = "1h";
+      bantime-increment = {
+        enable = true;
+        multipliers = "1 2 4 8 16 32 64";
+        maxtime = "168h"; # 1 week
+        overalljails = true;
+      };
+      ignoreIP = [
+        "127.0.0.1/8"
+        "::1"
+        # Add your trusted IP ranges here, e.g.:
+        # "192.168.1.0/24"
+      ];
+    };
   };
 
   # System packages available to all users
+  # Keep minimal - only emergency/recovery essentials
+  # User tools belong in home-manager for proper integration
   environment.systemPackages = with pkgs; [
-    # Basic system tools
-    wget
-    curl
-    git
+    # Bare essentials for emergency recovery
     vim
-    htop
-    tree
+    git
+    wget
+    
+    # Archive utilities for emergency file operations
     unzip
     zip
     
-    # Network tools
-    networkmanager
-    bluez
-    bluez-tools
-    
-    # SSH tools
-    openssh
-    
-    # Docker tools
-    docker
-    docker-compose
-    
-    # File systems
+    # File system support
     ntfs3g
     exfat
   ];
 
-  # Enable automatic updates for security
-  system.autoUpgrade = {
+  # Docker container runtime
+  virtualisation.docker = {
     enable = true;
-    flake = inputs.self.outPath;
-    flags = [
-      "--update-input"
-      "nixpkgs"
-      "-L" # print build logs
-    ];
-    dates = "02:00";
-    randomizedDelaySec = "45min";
+    enableOnBoot = true;
+    # Automatically prune old containers, images, and volumes
+    autoPrune = {
+      enable = true;
+      dates = "weekly";
+    };
   };
 
   # This value determines the NixOS release from which the default

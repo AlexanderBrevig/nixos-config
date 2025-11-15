@@ -82,18 +82,17 @@
       # package = config.boot.kernelPackages.nvidiaPackages.stable;
     };
 
-    # OpenGL/Vulkan support
-    opengl = {
+    # Graphics/Vulkan support
+    graphics = {
       enable = true;
-      driSupport = true;
-      driSupport32Bit = true;
-      
+      enable32Bit = true;
+
       extraPackages = with pkgs; [
         # NVIDIA packages
         nvidia-vaapi-driver
         vaapiVdpau
         libvdpau-va-gl
-        
+
         # Vulkan
         vulkan-validation-layers
         vulkan-tools
@@ -114,13 +113,7 @@
   services = {
     # Better mouse/keyboard support for gaming
     libinput.enable = true;
-    
-    # Enable Docker for development
-    docker = {
-      enable = true;
-      enableOnBoot = true;
-    };
-    
+
     # Enable virtualization
     libvirtd.enable = true;
   };
@@ -164,10 +157,9 @@
   boot.kernelParams = [
     # NVIDIA optimizations
     "nvidia-drm.modeset=1"
-    
+
     # Performance optimizations
     "intel_pstate=active"
-    "mitigations=off"  # Disable CPU mitigations for performance (less secure)
   ];
 
   # Enable firmware updates
@@ -200,10 +192,8 @@
         };
       };
     };
-    
-    docker = {
-      enable = true;
-      enableNvidia = true; # Enable NVIDIA container runtime
-    };
+
+    # NVIDIA container runtime for Docker (extends shared.nix config)
+    docker.enableNvidia = true;
   };
 }

@@ -13,15 +13,18 @@
   # XDG Desktop Portal for screen sharing and file dialogs
   xdg.portal = {
     enable = true;
-    wlr.enable = true;
-    
-    # Use GTK portal for file dialogs and other desktop integration
+
+    # Use Hyprland and GTK portals
     extraPortals = with pkgs; [
+      xdg-desktop-portal-hyprland
       xdg-desktop-portal-gtk
     ];
-    
-    # Configuration for portals
-    config.common.default = "*";
+
+    # Configure portal preferences
+    config = {
+      common.default = ["hyprland" "gtk"];
+      hyprland.default = ["hyprland" "gtk"];
+    };
   };
 
   # Enable required services for Wayland
@@ -175,21 +178,13 @@
     };
   };
 
-  # PipeWire configuration for screen sharing
-  services.pipewire = {
-    enable = true;
-    alsa.enable = true;
-    pulse.enable = true;
-    jack.enable = true;
-    
-    # Low latency configuration
-    extraConfig.pipewire."92-low-latency" = {
-      context.properties = {
-        default.clock.rate = 48000;
-        default.clock.quantum = 32;
-        default.clock.min-quantum = 32;
-        default.clock.max-quantum = 32;
-      };
+  # PipeWire low-latency configuration for Hyprland (extends shared.nix config)
+  services.pipewire.extraConfig.pipewire."92-low-latency" = {
+    context.properties = {
+      default.clock.rate = 48000;
+      default.clock.quantum = 32;
+      default.clock.min-quantum = 32;
+      default.clock.max-quantum = 32;
     };
   };
 
@@ -199,7 +194,4 @@
     ACTION=="add", SUBSYSTEM=="backlight", KERNEL=="intel_backlight", RUN+="${pkgs.coreutils}/bin/chgrp video /sys/class/backlight/%k/brightness"
     ACTION=="add", SUBSYSTEM=="backlight", KERNEL=="intel_backlight", RUN+="${pkgs.coreutils}/bin/chmod g+w /sys/class/backlight/%k/brightness"
   '';
-
-  # Add user to necessary groups
-  users.users.ab.extraGroups = [ "video" "input" "render" ];
 }

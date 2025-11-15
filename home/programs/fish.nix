@@ -80,26 +80,15 @@
       # Set default editor based on what's available
       ${if config.programs.helix.enable then "set -gx EDITOR helix"
         else "set -gx EDITOR nano"}
-      
-      # Development environment variables
-      set -gx RUST_BACKTRACE 1
-      set -gx CARGO_TARGET_DIR ~/.cargo/target
-      
-      # Go environment
-      set -gx GOPATH ~/.go
-      set -gx PATH $GOPATH/bin $PATH
-      
-      # Java environment  
-      set -gx JAVA_HOME ${pkgs.openjdk21}
-      
-      # Flutter environment
-      set -gx CHROME_EXECUTABLE ${pkgs.google-chrome}/bin/google-chrome-stable
-      
+
       # Nix-specific paths
       set -gx PATH ~/.nix-profile/bin $PATH
+
+      # Language-specific environment variables should be set in project flakes
+      # Example: Use direnv + .envrc to load per-project environments automatically
       
-      # Better colors for ls/eza
-      set -gx LS_COLORS (${pkgs.vivid}/bin/vivid generate snazzy)
+      # Better colors for ls/eza - Catppuccin Macchiato theme
+      set -gx LS_COLORS (${pkgs.vivid}/bin/vivid generate catppuccin-macchiato)
       
       # FZF configuration
       set -gx FZF_DEFAULT_COMMAND "${pkgs.fd}/bin/fd --type f --hidden --follow --exclude .git"

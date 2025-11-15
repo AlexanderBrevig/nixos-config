@@ -25,50 +25,29 @@
 
   # Development tools and applications
   home.packages = with pkgs; [
-    # Core development tools (always available)
+    # Core build tools (system-level)
     git
     just           # Build tool
     cmake
     gnumake
+    gcc            # System C compiler
+    clang          # System C/C++ compiler
+
+    # Language servers for editor integration (per-project toolchains via flakes)
+    rust-analyzer  # Rust LSP
+    gopls          # Go LSP
+    pyright        # Python LSP
+    # Add other LSPs as needed for your editor
     
-    # Stable language toolchains (for general development)
-    rustc
-    cargo
-    rust-analyzer  # Keep for editor integration
-    rustfmt
-    clippy
-    
-    go
-    gopls         # Keep for editor integration
-    gofumpt
-    
-    # System languages (rarely change versions)
-    gcc
-    clang
-    
-    # Python (system default, projects can override)
-    python3
-    python3Packages.pip
-    python3Packages.virtualenv
-    
-    # Optional: Keep if you use these frequently across projects
-    # openjdk21    # Move to project flakes if you need different versions
-    # gradle       # Move to project flakes
-    # maven        # Move to project flakes
-    # flutter      # Move to project flakes  
-    # dart         # Move to project flakes
-    # ocaml        # Move to project flakes
-    # dune_3       # Move to project flakes
-    # ocaml-lsp    # Move to project flakes
-    
-    # Terminal tools  
+    # Terminal tools
     wezterm
     starship
     zoxide
     bat           # batcat as cat
-    fd            # fdfind as fd  
+    fd            # fdfind as fd
     eza           # modern ls
     ripgrep       # rg
+    vivid         # LS_COLORS theme generator
     jq
     yq-go
     
