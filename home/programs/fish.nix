@@ -1,13 +1,10 @@
-# Fish shell configuration
 { config, pkgs, lib, ... }:
 
 {
   programs.fish = {
     enable = true;
     
-    # Shell aliases - using lib.mkMerge for better organization
     shellAliases = lib.mkMerge [
-      # Modern replacements
       {
         cat = "bat";
         ls = "eza --icons";
@@ -20,7 +17,6 @@
         htop = "btop";
       }
       
-      # Git shortcuts (only if git is enabled)
       (lib.mkIf config.programs.git.enable {
         g = "git";
         gs = "git status";
@@ -35,17 +31,13 @@
         glog = "git log --oneline --graph --all";
       })
       
-      # System shortcuts
       {
         rebuild = "sudo nixos-rebuild switch --flake .";
         test-rebuild = "sudo nixos-rebuild test --flake .";
         update = "nix flake update";
         clean = "sudo nix-collect-garbage -d";
         
-        # Development
         j = "just";
-        
-        # Navigation with zoxide
         cd = "z";
         
         # Quick navigation
@@ -70,35 +62,24 @@
         drmi = "docker rmi";
       }
     ];
-    
-    # Fish configuration
+
     interactiveShellInit = ''
-      # Initialize integrations (only if enabled)
       ${lib.optionalString config.programs.zoxide.enable "zoxide init fish | source"}
       ${lib.optionalString config.programs.starship.enable "starship init fish | source"}
-      
-      # Set default editor based on what's available
+
       ${if config.programs.helix.enable then "set -gx EDITOR helix"
         else "set -gx EDITOR nano"}
 
-      # Nix-specific paths
       set -gx PATH ~/.nix-profile/bin $PATH
 
-      # Language-specific environment variables should be set in project flakes
-      # Example: Use direnv + .envrc to load per-project environments automatically
-      
-      # Better colors for ls/eza - Catppuccin Macchiato theme
       set -gx LS_COLORS (${pkgs.vivid}/bin/vivid generate catppuccin-macchiato)
-      
-      # FZF configuration
+
       set -gx FZF_DEFAULT_COMMAND "${pkgs.fd}/bin/fd --type f --hidden --follow --exclude .git"
       set -gx FZF_CTRL_T_COMMAND "$FZF_DEFAULT_COMMAND"
       set -gx FZF_ALT_C_COMMAND "${pkgs.fd}/bin/fd --type d --hidden --follow --exclude .git"
-      
-      # Better history search with fzf
+
       bind \cr 'history | ${pkgs.fzf}/bin/fzf | read -l result; and commandline -- $result'
-      
-      # Vi mode indicators (optional)
+
       function fish_mode_prompt
         switch $fish_bind_mode
           case default
@@ -116,20 +97,11 @@
         end
         set_color normal
       end
-      
-      # Greeting customization
+
       set fish_greeting
     '';
-    
-    # Fish functions
+
     functions = {
-      # Quick project navigation
-      proj = {
-        description = "Navigate to projects directory";
-        body = "cd ~/projects; and ${pkgs.eza}/bin/eza --icons";
-      };
-      
-      # Create and enter directory
       mkcd = {
         description = "Create directory and cd into it";
         body = ''
@@ -140,8 +112,7 @@
           mkdir -p "$argv[1]" && cd "$argv[1]"
         '';
       };
-      
-      # Git clone and cd
+
       gcl = {
         description = "Git clone and cd into repository";
         body = ''
@@ -157,7 +128,6 @@
         '';
       };
       
-      # Quick file finder
       ff = {
         description = "Find and edit file with fzf";
         body = ''
@@ -167,57 +137,7 @@
           end
         '';
       };
-      
-      # Quick directory jump
-      fcd = {
-        description = "Find and change to directory with fzf";
-        body = ''
-          set dir (${pkgs.fd}/bin/fd --type d --hidden --follow --exclude .git | ${pkgs.fzf}/bin/fzf)
-          if test -n "$dir"
-            cd "$dir"
-          end
-        '';
-      };
-      
-      # Extract archives
-      extract = {
-        description = "Extract various archive formats";
-        body = ''
-          if test -z "$argv[1]"
-            echo "Usage: extract <archive>"
-            return 1
-          end
-          
-          switch "$argv[1]"
-            case "*.tar.bz2"
-              tar xjf "$argv[1]"
-            case "*.tar.gz"
-              tar xzf "$argv[1]"  
-            case "*.bz2"
-              bunzip2 "$argv[1]"
-            case "*.rar"
-              ${pkgs.unrar}/bin/unrar x "$argv[1]"
-            case "*.gz"
-              gunzip "$argv[1]"
-            case "*.tar"
-              tar xf "$argv[1]"
-            case "*.tbz2"
-              tar xjf "$argv[1]"
-            case "*.tgz"
-              tar xzf "$argv[1]"
-            case "*.zip"
-              ${pkgs.unzip}/bin/unzip "$argv[1]"
-            case "*.Z"
-              uncompress "$argv[1]"
-            case "*.7z"
-              ${pkgs.p7zip}/bin/7z x "$argv[1]"
-            case "*"
-              echo "Don't know how to extract '$argv[1]'"
-          end
-        '';
-      };
-      
-      # NixOS specific helpers
+
       nix-search = {
         description = "Search for packages in nixpkgs";
         body = "nix search nixpkgs $argv";
@@ -233,8 +153,7 @@
           nix shell nixpkgs#$argv[1] -c $argv[2..-1]
         '';
       };
-      
-      # Project environment helpers
+
       dev = {
         description = "Enter project development environment";
         body = ''
@@ -253,23 +172,37 @@
           end
         '';
       };
-      
+
       init-project = {
         description = "Initialize project with development environment";
         body = ''
           if test -z "$argv[1]"
-            echo "Usage: init-project <rust|go|java|python|flutter|ocaml|node|cpp>"
+            echo "Usage: init-project <rust|go|ocaml|node|java|generic>"
             return 1
           end
-          
-          set template_dir ~/.config/nixos/templates
-          
-          if not test -f flake.nix
-            cp $template_dir/flake.nix .
-            echo "📝 Created flake.nix - edit it to uncomment your language stack"
-            echo "🚀 Then run 'dev' to enter the environment"
-          else
+
+          set lang $argv[1]
+          set template_dir ~/github.com/nixos-config/templates
+
+          if test -f flake.nix
             echo "⚠️  flake.nix already exists"
+            return 1
+          end
+
+          switch $lang
+            case rust go ocaml node java generic
+              if test -f $template_dir/$lang.nix
+                cp $template_dir/$lang.nix flake.nix
+                echo "📝 Created $lang flake.nix"
+                echo "🚀 Run 'dev' to enter the environment"
+              else
+                echo "❌ Template not found: $template_dir/$lang.nix"
+                return 1
+              end
+            case '*'
+              echo "❌ Unknown language: $lang"
+              echo "Available: rust, go, ocaml, node, java, generic"
+              return 1
           end
         '';
       };
@@ -293,7 +226,6 @@
         '';
       };
       
-      # Docker helper functions
       docker-clean = {
         description = "Clean up Docker containers, images, and volumes";
         body = ''
@@ -349,13 +281,11 @@
     };
   };
 
-  # Related programs that work well with fish
   programs.zoxide = {
     enable = true;
     enableFishIntegration = true;
   };
   
-  # FZF integration for better fuzzy finding
   programs.fzf = {
     enable = true;
     enableFishIntegration = true;
@@ -379,7 +309,6 @@
     };
   };
   
-  # Direnv for automatic environment loading
   programs.direnv = {
     enable = true;
     nix-direnv.enable = true;

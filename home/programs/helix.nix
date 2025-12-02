@@ -1,4 +1,3 @@
-# Helix editor configuration
 { config, pkgs, lib, inputs, ... }:
 
 {
@@ -35,27 +34,18 @@
           display-inlay-hints = true;
         };
       };
-      
+
       keys.normal = {
-        # Quick save
         "C-s" = ":write";
-        
-        # Quick quit
         "C-q" = ":quit";
-        
-        # Navigate between windows
+
         "C-h" = "jump_view_left";
-        "C-j" = "jump_view_down"; 
+        "C-j" = "jump_view_down";
         "C-k" = "jump_view_up";
         "C-l" = "jump_view_right";
-        
-        # File picker
+
         "space f" = "file_picker";
-        
-        # Buffer picker
         "space b" = "buffer_picker";
-        
-        # Symbol picker
         "space s" = "symbol_picker";
       };
     };

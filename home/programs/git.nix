@@ -1,29 +1,22 @@
-# Git configuration
 { config, pkgs, lib, ... }:
 
 {
   programs.git = {
     enable = true;
     userName = "ab";
-    userEmail = "your-email@example.com"; # Update this
+    userEmail = "alexander.brevig@hey.com";
     
     extraConfig = {
       init.defaultBranch = "main";
       pull.rebase = true;
       push.autoSetupRemote = true;
       
-      # Better diff and merge tools
       diff.tool = "helix";
       merge.tool = "helix";
       
-      # Signing (uncomment and configure if you use GPG)
-      # commit.gpgsign = true;
-      # user.signingkey = "YOUR_GPG_KEY_ID";
-      
-      # Color output
       color.ui = "auto";
       
-      # Aliases for common commands
+      # TODO: move over old dotfile
       alias = {
         st = "status";
         co = "checkout";

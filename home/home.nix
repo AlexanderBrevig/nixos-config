@@ -1,8 +1,6 @@
-# Home Manager configuration
 { config, pkgs, lib, inputs, ... }:
 
 {
-  # Import program-specific configurations
   imports = [
     ./programs/git.nix
     ./programs/fish.nix
@@ -11,121 +9,85 @@
     ./programs/wezterm.nix
     ./programs/hyprland.nix
     ./programs/ssh.nix
+    ./programs/obsidian.nix
   ];
 
-  # Basic user info
   home = {
     username = "ab";
     homeDirectory = "/home/ab";
-    stateVersion = "24.11";
+    stateVersion = "25.05";
   };
 
-  # Let Home Manager install and manage itself
   programs.home-manager.enable = true;
 
-  # Development tools and applications
   home.packages = with pkgs; [
-    # Core build tools (system-level)
     git
-    just           # Build tool
+    just
     cmake
     gnumake
-    gcc            # System C compiler
-    clang          # System C/C++ compiler
+    gcc
+    clang
 
-    # Language servers for editor integration (per-project toolchains via flakes)
-    rust-analyzer  # Rust LSP
-    gopls          # Go LSP
-    pyright        # Python LSP
-    # Add other LSPs as needed for your editor
-    
-    # Terminal tools
+    rust-analyzer
+    gopls
+    pyright
+
     wezterm
     starship
     zoxide
-    bat           # batcat as cat
-    fd            # fdfind as fd
-    eza           # modern ls
-    ripgrep       # rg
-    vivid         # LS_COLORS theme generator
+    bat
+    fd
+    eza
+    ripgrep
+    vivid
     jq
     yq-go
-    
-    # Web browsers
+
     google-chrome
-    
-    # Communication
+
     slack
     discord
-    
-    # Media
+
     spotify
-    
-    # Design and CAD
+
     kicad
     blender
     inkscape
     gimp
     freecad
-    
-    # Claude desktop (if available, otherwise use web version)
-    # Add when available in nixpkgs
-    
-    # Additional development tools
+
     docker-compose
     kubectl
     terraform
-    
-    # File managers and utilities
+
     ranger
     fzf
     tree
     htop
     btop
-    
-    # Media tools
+
     ffmpeg
     imagemagick
-    
-    # Network tools
+
     nmap
     wget
     curl
-    
-    # Archive tools
+
     p7zip
     unrar
-    
-    # System utilities
+
     lshw
     usbutils
     pciutils
-    
-    # Fonts
+
     nerdfonts
   ];
 
-
-
-
-
-
-
-
-
-
-
-  # Direnv for project-specific environments
   programs.direnv = {
     enable = true;
     nix-direnv.enable = true;
   };
 
-
-
-
-
-  # XDG user directories
   xdg = {
     enable = true;
     userDirs = {

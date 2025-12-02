@@ -1,4 +1,3 @@
-# Desktop workstation configuration with NVIDIA
 { config, pkgs, lib, modulesPath, ... }:
 
 {
@@ -6,10 +5,8 @@
     (modulesPath + "/installer/scan/not-detected.nix")
   ];
 
-  # Hostname
   networking.hostName = "abstation";
 
-  # Boot configuration with LUKS encryption
   boot = {
     initrd = {
       availableKernelModules = [ 
@@ -17,9 +14,8 @@
         "xhci_pci" 
         "ahci" 
         "usbhid" 
-        "usb_storage" 
+        "usb_storage"
         "sd_mod"
-        # LUKS support
         "aes"
         "aes_generic" 
         "blowfish"
@@ -46,7 +42,6 @@
     extraModulePackages = [ ];
   };
 
-  # File systems - customize these after installation
   fileSystems = {
     "/" = {
       # Update this device path after installation
@@ -62,123 +57,90 @@
     };
   };
 
-  # Swap configuration
   swapDevices = [
-    # Uncomment and configure after installation
     # { device = "/dev/disk/by-uuid/SWAP-UUID-HERE"; }
   ];
 
-  # Hardware configuration for workstation
   hardware = {
-    # NVIDIA proprietary drivers
     nvidia = {
       modesetting.enable = true;
       powerManagement.enable = false;
       powerManagement.finegrained = false;
-      open = false; # Use proprietary drivers
+      open = false;
       nvidiaSettings = true;
       
-      # Specify driver version (remove if you want latest)
       # package = config.boot.kernelPackages.nvidiaPackages.stable;
     };
 
-    # Graphics/Vulkan support
     graphics = {
       enable = true;
       enable32Bit = true;
 
       extraPackages = with pkgs; [
-        # NVIDIA packages
         nvidia-vaapi-driver
         vaapiVdpau
         libvdpau-va-gl
 
-        # Vulkan
         vulkan-validation-layers
         vulkan-tools
       ];
     };
 
-    # CPU microcode
     cpu.intel.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
     
-    # Enable firmware updates
     enableRedistributableFirmware = true;
   };
 
-  # Load NVIDIA driver for Xorg and Wayland
   services.xserver.videoDrivers = [ "nvidia" ];
 
-  # Desktop-specific services
   services = {
-    # Better mouse/keyboard support for gaming
     libinput.enable = true;
-
-    # Enable virtualization
     libvirtd.enable = true;
   };
 
-  # Workstation-specific packages
   environment.systemPackages = with pkgs; [
-    # System monitoring
     lm_sensors
-    nvtop      # NVIDIA GPU monitoring
-    nvidia-smi # NVIDIA system management
-    
-    # Virtualization tools
+    nvtop
+    nvidia-smi
+
     virt-manager
     qemu
     
-    # Development containers
     docker-compose
     
-    # GPU tools
     vulkan-tools
     glxinfo
     
-    # Performance tools
     stress-ng
     memtester
   ];
 
-  # Workstation optimizations
   powerManagement = {
     enable = true;
-    cpuFreqGovernor = "performance"; # Performance mode for workstation
+    cpuFreqGovernor = "performance";
   };
 
-  # Desktop networking (Ethernet preferred)
   networking = {
-    # If you have both WiFi and Ethernet, prioritize Ethernet
     networkmanager.insertNameservers = [ "1.1.1.1" "8.8.8.8" ];
   };
 
-  # Workstation-specific kernel parameters
   boot.kernelParams = [
-    # NVIDIA optimizations
     "nvidia-drm.modeset=1"
-
-    # Performance optimizations
     "intel_pstate=active"
   ];
 
-  # Enable firmware updates
   services.fwupd.enable = true;
 
-  # Gaming and multimedia optimizations
   programs = {
-    # Steam gaming
     steam = {
       enable = true;
       remotePlay.openFirewall = true;
       dedicatedServer.openFirewall = true;
     };
     
-    # GameMode for optimized gaming performance
     gamemode.enable = true;
   };
 
-  # Additional virtualization support
   virtualisation = {
     libvirtd = {
       enable = true;
@@ -193,7 +155,6 @@
       };
     };
 
-    # NVIDIA container runtime for Docker (extends shared.nix config)
     docker.enableNvidia = true;
   };
 }

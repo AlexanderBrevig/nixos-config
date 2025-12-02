@@ -1,4 +1,3 @@
-# Hyprland window manager configuration
 { config, pkgs, lib, inputs, ... }:
 
 {
@@ -7,15 +6,10 @@
     package = inputs.hyprland.packages.${pkgs.system}.hyprland;
     
     settings = {
-      # Monitor configuration (update these for your setup)
       monitor = [
-        # Example configurations - update for your monitors
-        # "DP-1,2560x1440@144,0x0,1"
-        # "eDP-1,1920x1080@60,2560x0,1"
         ",preferred,auto,1"
       ];
-      
-      # Input configuration
+
       input = {
         kb_layout = "us";
         follow_mouse = 1;
@@ -25,11 +19,10 @@
           disable_while_typing = true;
           tap-to-click = true;
         };
-        
-        sensitivity = 0; # -1.0 - 1.0, 0 means no modification.
+
+        sensitivity = 0;
       };
-      
-      # General configuration
+
       general = {
         gaps_in = 5;
         gaps_out = 10;
@@ -38,8 +31,7 @@
         "col.inactive_border" = "rgba(595959aa)";
         layout = "dwindle";
       };
-      
-      # Decoration
+
       decoration = {
         rounding = 5;
         
@@ -54,8 +46,7 @@
         shadow_render_power = 3;
         "col.shadow" = "rgba(1a1a1aee)";
       };
-      
-      # Animations
+
       animations = {
         enabled = true;
         
@@ -70,16 +61,13 @@
           "workspaces, 1, 6, default"
         ];
       };
-      
-      # Layout configuration
+
       dwindle = {
         pseudotile = true;
         preserve_split = true;
       };
-      
-      # Key bindings
+
       bind = [
-        # Basic bindings
         "SUPER, Q, exec, wezterm"
         "SUPER, C, killactive"
         "SUPER, M, exit"
@@ -88,18 +76,15 @@
         "SUPER, R, exec, rofi -show drun"
         "SUPER, P, pseudo"
         "SUPER, J, togglesplit"
-        
-        # Screenshot
+
         "SUPER, S, exec, flameshot gui"
         "SUPER SHIFT, S, exec, grim -g \"$(slurp)\" - | wl-copy"
-        
-        # Move focus with mainMod + arrow keys
+
         "SUPER, left, movefocus, l"
-        "SUPER, right, movefocus, r"  
+        "SUPER, right, movefocus, r"
         "SUPER, up, movefocus, u"
         "SUPER, down, movefocus, d"
-        
-        # Switch workspaces with mainMod + [0-9]
+
         "SUPER, 1, workspace, 1"
         "SUPER, 2, workspace, 2"
         "SUPER, 3, workspace, 3"
@@ -110,8 +95,7 @@
         "SUPER, 8, workspace, 8"
         "SUPER, 9, workspace, 9"
         "SUPER, 0, workspace, 10"
-        
-        # Move active window to a workspace with mainMod + SHIFT + [0-9]
+
         "SUPER SHIFT, 1, movetoworkspace, 1"
         "SUPER SHIFT, 2, movetoworkspace, 2"
         "SUPER SHIFT, 3, movetoworkspace, 3"
@@ -123,22 +107,19 @@
         "SUPER SHIFT, 9, movetoworkspace, 9"
         "SUPER SHIFT, 0, movetoworkspace, 10"
       ];
-      
-      # Mouse bindings
+
       bindm = [
         "SUPER, mouse:272, movewindow"
         "SUPER, mouse:273, resizewindow"
       ];
-      
-      # Window rules
+
       windowrulev2 = [
         "float,class:^(pavucontrol)$"
         "float,class:^(blueman-manager)$"
         "float,class:^(nm-applet)$"
         "float,class:^(flameshot)$"
       ];
-      
-      # Startup applications
+
       exec-once = [
         "waybar"
         "dunst"

@@ -14,7 +14,6 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    # Hyprland for latest Wayland compositor
     hyprland.url = "github:hyprwm/Hyprland";
   };
 
@@ -24,9 +23,7 @@
       pkgs = nixpkgs.legacyPackages.${system};
     in
     {
-      # NixOS Configurations
       nixosConfigurations = {
-        # Laptop configuration
         ablaptop = nixpkgs.lib.nixosSystem {
           inherit system;
           specialArgs = { inherit inputs; };
@@ -34,8 +31,7 @@
             ./hosts/ablaptop.nix
             ./modules/shared.nix
             ./modules/hyprland.nix
-            
-            # Home Manager as NixOS module
+
             home-manager.nixosModules.home-manager
             {
               home-manager.useGlobalPkgs = true;
@@ -46,7 +42,6 @@
           ];
         };
 
-        # Desktop workstation configuration
         abstation = nixpkgs.lib.nixosSystem {
           inherit system;
           specialArgs = { inherit inputs; };
@@ -54,8 +49,7 @@
             ./hosts/abstation.nix
             ./modules/shared.nix
             ./modules/hyprland.nix
-            
-            # Home Manager as NixOS module
+
             home-manager.nixosModules.home-manager
             {
               home-manager.useGlobalPkgs = true;
@@ -67,7 +61,6 @@
         };
       };
 
-      # Development shell for easy system management
       devShells.${system}.default = pkgs.mkShell {
         buildInputs = with pkgs; [
           git

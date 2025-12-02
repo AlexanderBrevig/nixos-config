@@ -1,12 +1,6 @@
-# Starship prompt configuration
 { config, pkgs, lib, ... }:
 
 {
-  # Examples of what each parameter provides:
-  # - pkgs: Access to all nixpkgs (e.g., pkgs.coreutils, pkgs.git)
-  # - config: Access to other Home Manager config (e.g., config.programs.git.enable)  
-  # - lib: Nix utility functions (e.g., lib.mkIf, lib.optionalString)
-  
   programs.starship = {
     enable = true;
     
@@ -46,8 +40,7 @@
         success_symbol = "[❯](bold green)";
         error_symbol = "[❯](bold red)";
       };
-      
-      # Language-specific modules
+
       rust = {
         format = "[$symbol($version )]($style)";
       };
