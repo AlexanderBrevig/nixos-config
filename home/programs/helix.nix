@@ -10,43 +10,21 @@
       
       editor = {
         line-number = "relative";
-        mouse = true;
-        cursor-shape = {
-          insert = "bar";
-          normal = "block";
-          select = "underline";
+        scrolloff = 5;
+        idle-timeout = 0;
+        auto-pairs = false;
+        color-modes = true;
+        cursorline = true;
+        true-color = true;
+        rulers = [];
+        cursor-shape.insert = "bar";
+        file-picker.hidden = false;
+        lsp.display-messages = true;
+        statusline = {
+          left = ["mode" "spinner"];
+          center = ["file-name"];
+          right = ["diagnostics" "selections" "position" "file-encoding" "file-line-ending" "file-type"];
         };
-        
-        file-picker = {
-          hidden = false;
-        };
-        
-        indent-guides = {
-          render = true;
-        };
-        
-        soft-wrap = {
-          enable = true;
-        };
-        
-        lsp = {
-          display-messages = true;
-          display-inlay-hints = true;
-        };
-      };
-
-      keys.normal = {
-        "C-s" = ":write";
-        "C-q" = ":quit";
-
-        "C-h" = "jump_view_left";
-        "C-j" = "jump_view_down";
-        "C-k" = "jump_view_up";
-        "C-l" = "jump_view_right";
-
-        "space f" = "file_picker";
-        "space b" = "buffer_picker";
-        "space s" = "symbol_picker";
       };
     };
     

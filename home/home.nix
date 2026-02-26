@@ -91,6 +91,12 @@
     nix-direnv.enable = true;
   };
 
+  home.file.".config/chrome-flags.conf".text = ''
+    --ozone-platform=wayland
+    --enable-features=VaapiVideoDecoder,VaapiVideoEncoder
+    --use-gl=egl
+  '';
+
   xdg = {
     enable = true;
     userDirs = {

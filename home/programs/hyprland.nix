@@ -127,14 +127,12 @@
       ];
 
       windowrule = [
-        "float,class:^(pavucontrol)$"
-        "float,class:^(blueman-manager)$"
-        "float,class:^(nm-applet)$"
-        "float,class:^(flameshot)$"
+        "float on, match:class ^(pavucontrol)$"
+        "float on, match:class ^(blueman-manager)$"
+        "float on, match:class ^(nm-applet)$"
+        "float on, match:class ^(flameshot)$"
 
-        "float,class:^(scratchpad)$"
-        "size 80% 80%,class:^(scratchpad)$"
-        "center,class:^(scratchpad)$"
+        "float on, match:class ^(scratchpad)$"
       ];
 
       exec-once = [

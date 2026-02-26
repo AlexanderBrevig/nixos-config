@@ -59,8 +59,8 @@
       SDL_VIDEODRIVER = "wayland";
       _JAVA_AWT_WM_NONREPARENTING = "1";
       MOZ_ENABLE_WAYLAND = "1";
+      LIBVA_DRIVER_NAME = "iHD";
     } // (lib.optionalAttrs (config.services.xserver.videoDrivers or [] == ["nvidia"]) {
-      LIBVA_DRIVER_NAME = "nvidia";
       GBM_BACKEND = "nvidia-drm";
       __GLX_VENDOR_LIBRARY_NAME = "nvidia";
       WLR_NO_HARDWARE_CURSORS = "1";
