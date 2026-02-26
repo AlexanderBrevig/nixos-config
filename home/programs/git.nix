@@ -7,6 +7,7 @@
     userEmail = "alexander.brevig@hey.com";
     
     extraConfig = {
+      core.editor = "hx";
       init.defaultBranch = "main";
       pull.rebase = true;
       push.autoSetupRemote = true;

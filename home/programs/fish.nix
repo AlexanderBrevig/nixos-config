@@ -72,7 +72,7 @@
 
       set -gx PATH ~/.nix-profile/bin $PATH
 
-      set -gx LS_COLORS (${pkgs.vivid}/bin/vivid generate catppuccin-macchiato)
+      set -gx LS_COLORS (${pkgs.vivid}/bin/vivid generate catppuccin-mocha)
 
       set -gx FZF_DEFAULT_COMMAND "${pkgs.fd}/bin/fd --type f --hidden --follow --exclude .git"
       set -gx FZF_CTRL_T_COMMAND "$FZF_DEFAULT_COMMAND"

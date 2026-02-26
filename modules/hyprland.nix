@@ -11,12 +11,15 @@
     enable = true;
 
     extraPortals = with pkgs; [
-      xdg-desktop-portal-hyprland
       xdg-desktop-portal-gtk
     ];
 
     config = {
-      common.default = ["gtk"];
+      common = {
+        default = ["gtk"];
+        "org.freedesktop.impl.portal.Screencast" = ["hyprland"];
+        "org.freedesktop.impl.portal.Screenshot" = ["hyprland"];
+      };
       hyprland.default = ["hyprland" "gtk"];
     };
 
@@ -73,12 +76,14 @@
       hyprpaper
       hyprlock
       hypridle
+      cliphist
+      polkit_gnome
       hyprpicker
 
       dunst
       libnotify
 
-      rofi-wayland
+      fuzzel
       waybar
 
       wf-recorder
@@ -103,8 +108,8 @@
       dejavu_fonts
       liberation_ttf
       noto-fonts
-      noto-fonts-cjk
-      noto-fonts-emoji
+      noto-fonts-cjk-sans
+      noto-fonts-color-emoji
 
       fira-code
       fira-code-symbols

@@ -9,13 +9,14 @@
     ./programs/wezterm.nix
     ./programs/hyprland.nix
     ./programs/ssh.nix
-    ./programs/obsidian.nix
+    ./programs/waybar.nix
+    ./programs/fuzzel.nix
   ];
 
   home = {
     username = "ab";
     homeDirectory = "/home/ab";
-    stateVersion = "25.05";
+    stateVersion = "25.11";
   };
 
   programs.home-manager.enable = true;
@@ -26,7 +27,7 @@
     cmake
     gnumake
     gcc
-    clang
+    clang-tools
 
     rust-analyzer
     gopls
@@ -54,11 +55,12 @@
     blender
     inkscape
     gimp
-    freecad
+    # freecad  # TODO: broken in nixpkgs (boost issue)
 
     docker-compose
     kubectl
     terraform
+    claude-code
 
     ranger
     fzf
@@ -80,7 +82,8 @@
     usbutils
     pciutils
 
-    nerdfonts
+    nerd-fonts.jetbrains-mono
+    nerd-fonts.fira-code
   ];
 
   programs.direnv = {

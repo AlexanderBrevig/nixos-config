@@ -10,7 +10,7 @@
       config.font = wezterm.font('JetBrains Mono')
       config.font_size = 12.0
 
-      config.color_scheme = 'OneDark (base16)'
+      config.color_scheme = 'Catppuccin Mocha'
 
       config.window_background_opacity = 0.95
 

@@ -11,7 +11,8 @@
       ];
 
       input = {
-        kb_layout = "us";
+        kb_layout = "us,no";
+        kb_options = "grp:alt_shift_toggle,caps:escape";
         follow_mouse = 1;
         
         touchpad = {
@@ -27,24 +28,19 @@
         gaps_in = 5;
         gaps_out = 10;
         border_size = 2;
-        "col.active_border" = "rgba(33ccffee) rgba(00ff99ee) 45deg";
-        "col.inactive_border" = "rgba(595959aa)";
+        "col.active_border" = "rgba(cba6f7ee) rgba(89b4faee) 45deg";
+        "col.inactive_border" = "rgba(45475aaa)";
         layout = "dwindle";
       };
 
       decoration = {
         rounding = 5;
-        
+
         blur = {
           enabled = true;
           size = 8;
           passes = 1;
         };
-        
-        drop_shadow = true;
-        shadow_range = 4;
-        shadow_render_power = 3;
-        "col.shadow" = "rgba(1a1a1aee)";
       };
 
       animations = {
@@ -68,22 +64,39 @@
       };
 
       bind = [
-        "SUPER, Q, exec, wezterm"
-        "SUPER, C, killactive"
-        "SUPER, M, exit"
+        "SUPER, Return, exec, wezterm"
+        "SUPER SHIFT, Return, togglespecialworkspace, terminal"
+        "SUPER, Q, killactive"
+        "SUPER SHIFT, Q, exec, bash -c 'echo -e \"Logout\\nCancel\" | fuzzel --dmenu -p \"Logout? \" | grep -q Logout && hyprctl dispatch exit'"
         "SUPER, E, exec, nautilus"
         "SUPER, V, togglefloating"
-        "SUPER, R, exec, rofi -show drun"
-        "SUPER, P, pseudo"
-        "SUPER, J, togglesplit"
+        "SUPER, F, fullscreen"
+        "SUPER, Space, exec, fuzzel"
 
         "SUPER, S, exec, flameshot gui"
         "SUPER SHIFT, S, exec, grim -g \"$(slurp)\" - | wl-copy"
+        "SUPER, P, exec, hyprlock"
+        "SUPER SHIFT, V, exec, cliphist list | fuzzel -d | cliphist decode | wl-copy"
 
+        # Focus with arrows and vim keys
         "SUPER, left, movefocus, l"
         "SUPER, right, movefocus, r"
         "SUPER, up, movefocus, u"
         "SUPER, down, movefocus, d"
+        "SUPER, H, movefocus, l"
+        "SUPER, L, movefocus, r"
+        "SUPER, K, movefocus, u"
+        "SUPER, J, movefocus, d"
+
+        # Move windows with arrows and vim keys
+        "SUPER SHIFT, left, movewindow, l"
+        "SUPER SHIFT, right, movewindow, r"
+        "SUPER SHIFT, up, movewindow, u"
+        "SUPER SHIFT, down, movewindow, d"
+        "SUPER SHIFT, H, movewindow, l"
+        "SUPER SHIFT, L, movewindow, r"
+        "SUPER SHIFT, K, movewindow, u"
+        "SUPER SHIFT, J, movewindow, d"
 
         "SUPER, 1, workspace, 1"
         "SUPER, 2, workspace, 2"
@@ -113,19 +126,27 @@
         "SUPER, mouse:273, resizewindow"
       ];
 
-      windowrulev2 = [
+      windowrule = [
         "float,class:^(pavucontrol)$"
         "float,class:^(blueman-manager)$"
         "float,class:^(nm-applet)$"
         "float,class:^(flameshot)$"
+
+        "float,class:^(scratchpad)$"
+        "size 80% 80%,class:^(scratchpad)$"
+        "center,class:^(scratchpad)$"
       ];
 
       exec-once = [
-        "waybar"
+        "[workspace special:terminal silent] wezterm start --class scratchpad"
+        "waybar > /dev/null 2>&1"
         "dunst"
         "hyprpaper"
         "nm-applet"
         "blueman-applet"
+        "wl-paste --type text --watch cliphist store"
+        "wl-paste --type image --watch cliphist store"
+        "/run/current-system/sw/libexec/polkit-gnome-authentication-agent-1"
       ];
     };
   };

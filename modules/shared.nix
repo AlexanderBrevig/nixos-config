@@ -1,6 +1,13 @@
 { config, pkgs, lib, inputs, ... }:
 
 {
+  nixpkgs.config.allowUnfree = true;
+
+  nixpkgs.overlays = [
+    (final: prev: {
+      jetbrains-mono = inputs.nixpkgs-stable.legacyPackages.${prev.system}.jetbrains-mono;
+    })
+  ];
   boot = {
     loader = {
       systemd-boot.enable = true;
@@ -72,6 +79,7 @@
     alsa.support32Bit = true;
     pulse.enable = true;
     jack.enable = true;
+    wireplumber.enable = true;
   };
 
   services = {
@@ -88,18 +96,6 @@
       };
     };
 
-    nix = {
-      gc = {
-        automatic = true;
-        dates = "weekly";
-        options = "--delete-older-than 30d";
-      };
-      
-      settings = {
-        experimental-features = [ "nix-command" "flakes" ];
-        auto-optimise-store = true;
-      };
-    };
     
     power-profiles-daemon.enable = true;
 
@@ -143,5 +139,17 @@
     };
   };
 
-  system.stateVersion = "25.05";
+  nix = {
+    gc = {
+      automatic = true;
+      dates = "weekly";
+      options = "--delete-older-than 30d";
+    };
+    settings = {
+      experimental-features = [ "nix-command" "flakes" ];
+      auto-optimise-store = true;
+    };
+  };
+
+  system.stateVersion = "25.11";
 }

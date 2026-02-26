@@ -14,7 +14,7 @@ let
     owner = "blacksmithgu";
     repo = "obsidian-dataview";
     rev = "0.5.67";
-    hash = "sha256-y5TeCLUW+tanePZbRarR3FsLJII8RH2SUIKyJ2FTF+4=";
+    hash = "sha256-AbK1J1a8bqkPCe9dqADAfR/q/j/kRGa8qouj9GJQErc=";
   };
 in
 {
