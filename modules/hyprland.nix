@@ -31,7 +31,7 @@
       enable = true;
       settings = {
         default_session = {
-          command = "${pkgs.greetd.tuigreet}/bin/tuigreet --time --cmd Hyprland";
+          command = "${pkgs.greetd.tuigreet}/bin/tuigreet --time --cmd 'uwsm start hyprland-uwsm.desktop'";
           user = "greeter";
         };
       };
@@ -67,6 +67,7 @@
     });
 
     systemPackages = with pkgs; [
+      uwsm
       wayland
       wayland-protocols
       wayland-utils
