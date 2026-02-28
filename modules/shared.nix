@@ -6,6 +6,7 @@
   nixpkgs.overlays = [
     (final: prev: {
       jetbrains-mono = inputs.nixpkgs-stable.legacyPackages.${prev.system}.jetbrains-mono;
+      freecad = inputs.nixpkgs-stable.legacyPackages.${prev.system}.freecad;
     })
   ];
   boot = {
@@ -122,12 +123,14 @@
     vim
     git
     wget
-    
+
     unzip
     zip
-    
+
     ntfs3g
     exfat
+
+    freecad
   ];
 
   virtualisation.docker = {
