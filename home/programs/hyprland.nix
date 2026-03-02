@@ -134,8 +134,8 @@
 
         "float on, match:class ^(scratchpad)$"
 
-        "size 900 700, match:class ^(kicad)$, prop:floating 1"
-        "center 0, match:class ^(kicad)$, prop:floating 1"
+        "size 900 700, match:class ^(kicad)$, match:float 1"
+        "center 0, match:class ^(kicad)$, match:float 1"
       ];
 
       exec-once = [
