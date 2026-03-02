@@ -3,8 +3,17 @@
 {
   programs.hyprland = {
     enable = true;
-    package = inputs.hyprland.packages.${pkgs.system}.hyprland;
+    package = inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.hyprland;
     xwayland.enable = true;
+  };
+
+  programs.uwsm = {
+    enable = true;
+    waylandCompositors.hyprland = {
+      prettyName = "Hyprland";
+      comment = "Hyprland compositor managed by UWSM";
+      binPath = "${inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.hyprland}/bin/Hyprland";
+    };
   };
 
   xdg.portal = {
@@ -23,18 +32,14 @@
       hyprland.default = ["hyprland" "gtk"];
     };
 
-    xdgOpenUsePortal = true;
   };
 
   services = {
-    greetd = {
+    displayManager.sddm = {
       enable = true;
-      settings = {
-        default_session = {
-          command = "${pkgs.greetd.tuigreet}/bin/tuigreet --time --cmd 'uwsm start hyprland-uwsm.desktop'";
-          user = "greeter";
-        };
-      };
+      wayland.enable = true;
+      theme = "catppuccin-mocha";
+      package = pkgs.kdePackages.sddm;
     };
 
     dbus.enable = true;
@@ -60,13 +65,20 @@
       _JAVA_AWT_WM_NONREPARENTING = "1";
       MOZ_ENABLE_WAYLAND = "1";
       LIBVA_DRIVER_NAME = "iHD";
-    } // (lib.optionalAttrs (config.services.xserver.videoDrivers or [] == ["nvidia"]) {
+    } // (lib.optionalAttrs (builtins.elem "nvidia" (config.services.xserver.videoDrivers or [])) {
       GBM_BACKEND = "nvidia-drm";
       __GLX_VENDOR_LIBRARY_NAME = "nvidia";
       WLR_NO_HARDWARE_CURSORS = "1";
     });
 
-    systemPackages = with pkgs; [
+    systemPackages = [
+      (pkgs.catppuccin-sddm.override {
+        flavor = "mocha";
+        font = "JetBrains Mono";
+        fontSize = "12";
+        loginBackground = false;
+      })
+    ] ++ (with pkgs; [
       uwsm
       wayland
       wayland-protocols
@@ -101,7 +113,7 @@
       imv
       mpv
       zathura
-    ];
+    ]);
   };
 
   fonts = {

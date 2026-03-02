@@ -37,7 +37,7 @@
         crust = "#11111b";
       };
 
-      format = "$username$hostname$directory$git_branch$git_status$cmd_duration$line_break$character";
+      format = "$username$hostname$directory$nix_shell$git_branch$git_status$cmd_duration$line_break$character";
 
       username = {
         show_always = false;
@@ -75,6 +75,12 @@
       character = {
         success_symbol = "[❯](bold green)";
         error_symbol = "[❯](bold red)";
+      };
+
+      nix_shell = {
+        format = "[$symbol$state( \\($name\\))]($style) ";
+        symbol = " ";
+        style = "bold sky";
       };
 
       rust = {

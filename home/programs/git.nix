@@ -3,21 +3,26 @@
 {
   programs.git = {
     enable = true;
-    userName = "ab";
-    userEmail = "alexander.brevig@hey.com";
-    
-    extraConfig = {
+
+    ignores = [
+      ".direnv"
+      ".claude"
+    ];
+
+    settings = {
+      user.name = "ab";
+      user.email = "alexander.brevig@hey.com";
+
       core.editor = "hx";
       init.defaultBranch = "main";
       pull.rebase = true;
       push.autoSetupRemote = true;
-      
+
       diff.tool = "helix";
       merge.tool = "helix";
-      
+
       color.ui = "auto";
-      
-      # TODO: move over old dotfile
+
       alias = {
         st = "status";
         co = "checkout";

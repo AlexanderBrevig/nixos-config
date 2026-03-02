@@ -5,8 +5,8 @@
 
   nixpkgs.overlays = [
     (final: prev: {
-      jetbrains-mono = inputs.nixpkgs-stable.legacyPackages.${prev.system}.jetbrains-mono;
-      freecad = inputs.nixpkgs-stable.legacyPackages.${prev.system}.freecad;
+      jetbrains-mono = inputs.nixpkgs-stable.legacyPackages.${prev.stdenv.hostPlatform.system}.jetbrains-mono;
+      freecad = inputs.nixpkgs-stable.legacyPackages.${prev.stdenv.hostPlatform.system}.freecad;
     })
   ];
   boot = {
@@ -71,8 +71,9 @@
   hardware = {
     bluetooth.enable = true;
     bluetooth.powerOnBoot = true;
-    pulseaudio.enable = false;
   };
+
+  services.pulseaudio.enable = false;
 
   services.pipewire = {
     enable = true;

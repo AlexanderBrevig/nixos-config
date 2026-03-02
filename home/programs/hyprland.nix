@@ -3,7 +3,7 @@
 {
   wayland.windowManager.hyprland = {
     enable = true;
-    package = inputs.hyprland.packages.${pkgs.system}.hyprland;
+    package = inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.hyprland;
     
     settings = {
       monitor = [
@@ -71,7 +71,7 @@
         "SUPER, E, exec, nautilus"
         "SUPER, V, togglefloating"
         "SUPER, F, fullscreen"
-        "SUPER, Space, exec, fuzzel"
+        "SUPER, D, exec, fuzzel"
 
         "SUPER, S, exec, flameshot gui"
         "SUPER SHIFT, S, exec, grim -g \"$(slurp)\" - | wl-copy"
@@ -133,6 +133,9 @@
         "float on, match:class ^(flameshot)$"
 
         "float on, match:class ^(scratchpad)$"
+
+        "size 900 700, match:class ^(kicad)$, prop:floating 1"
+        "center 0, match:class ^(kicad)$, prop:floating 1"
       ];
 
       exec-once = [

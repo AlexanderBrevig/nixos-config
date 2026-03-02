@@ -3,7 +3,7 @@
 {
   programs.helix = {
     enable = true;
-    package = inputs.helix.packages.${pkgs.system}.helix;
+    package = inputs.helix.packages.${pkgs.stdenv.hostPlatform.system}.helix;
     
     settings = {
       theme = "catppuccin_mocha";
