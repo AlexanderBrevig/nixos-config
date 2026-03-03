@@ -62,6 +62,8 @@
     terraform
     claude-code
 
+    xfce.thunar
+    xfce.thunar-volman  # auto-mount USB in Thunar
     ranger
     fzf
     tree
@@ -85,6 +87,13 @@
     nerd-fonts.jetbrains-mono
     nerd-fonts.fira-code
   ];
+
+  services.udiskie = {
+    enable = true;
+    automount = true;
+    notify = true;
+    tray = "never";  # no tray icon (no systray in Hyprland by default)
+  };
 
   programs.direnv = {
     enable = true;

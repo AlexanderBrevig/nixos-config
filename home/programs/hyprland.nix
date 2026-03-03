@@ -131,11 +131,18 @@
         "float on, match:class ^(blueman-manager)$"
         "float on, match:class ^(nm-applet)$"
         "float on, match:class ^(flameshot)$"
+        "noanim on, match:class ^(flameshot)$"
+        "move 0 0, match:class ^(flameshot)$"
+        "pin on, match:class ^(flameshot)$"
+        "suppressevent fullscreen, match:class ^(flameshot)$"
 
         "float on, match:class ^(scratchpad)$"
 
         "size 900 700, match:class ^(kicad)$, match:float 1"
         "center 0, match:class ^(kicad)$, match:float 1"
+
+        "float on, match:class ^(org.freecad.FreeCAD)$, match:title !^(FreeCAD)$"
+        "center 0, match:class ^(org.freecad.FreeCAD)$, match:float 1"
       ];
 
       exec-once = [
