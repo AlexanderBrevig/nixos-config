@@ -62,13 +62,13 @@
     terraform
     claude-code
 
-    xfce.thunar
-    xfce.thunar-volman  # auto-mount USB in Thunar
+    thunar
+    thunar-volman  # auto-mount USB in Thunar
     ranger
     fzf
     tree
     htop
-    btop
+    # btop  # managed by programs.btop
 
     ffmpeg
     imagemagick
@@ -86,6 +86,8 @@
 
     nerd-fonts.jetbrains-mono
     nerd-fonts.fira-code
+
+    nwg-displays
   ];
 
   services.udiskie = {
@@ -93,6 +95,14 @@
     automount = true;
     notify = true;
     tray = "never";  # no tray icon (no systray in Hyprland by default)
+  };
+
+  programs.btop = {
+    enable = true;
+    settings = {
+      color_theme = "catppuccin_mocha";
+      theme_background = false;
+    };
   };
 
   programs.direnv = {

@@ -7,6 +7,7 @@
     ignores = [
       ".direnv"
       ".claude"
+      "CLAUDE.md"
     ];
 
     settings = {

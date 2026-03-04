@@ -7,7 +7,9 @@
     
     settings = {
       monitor = [
-        ",preferred,auto,1"
+        "DP-2, preferred, -760x0, 1"
+        "eDP-1, preferred, 0x1440, 1"
+        ", preferred, auto, 1"
       ];
 
       input = {
@@ -70,6 +72,7 @@
         "SUPER SHIFT, Q, exec, bash -c 'echo -e \"Logout\\nCancel\" | fuzzel --dmenu -p \"Logout? \" | grep -q Logout && hyprctl dispatch exit'"
         "SUPER, E, exec, nautilus"
         "SUPER, V, togglefloating"
+        "SUPER, P, togglesplit"
         "SUPER, F, fullscreen"
         "SUPER, D, exec, fuzzel"
 
@@ -127,22 +130,22 @@
       ];
 
       windowrule = [
-        "float on, match:class ^(pavucontrol)$"
-        "float on, match:class ^(blueman-manager)$"
-        "float on, match:class ^(nm-applet)$"
-        "float on, match:class ^(flameshot)$"
-        "no_anim on, match:class ^(flameshot)$"
-        "move 0 0, match:class ^(flameshot)$"
-        "pin on, match:class ^(flameshot)$"
-        "suppress_event fullscreen, match:class ^(flameshot)$"
+        "match:class ^(pavucontrol)$, float on"
+        "match:class ^(blueman-manager)$, float on"
+        "match:class ^(nm-applet)$, float on"
+        "match:class ^(flameshot)$, float on"
+        "match:class ^(flameshot)$, animation none"
+        "match:class ^(flameshot)$, move 0 0"
+        "match:class ^(flameshot)$, pin on"
+        "match:class ^(flameshot)$, suppress_event fullscreen"
 
-        "float on, match:class ^(scratchpad)$"
+        "match:class ^(scratchpad)$, float on"
 
-        "size 900 700, match:class ^(kicad)$, match:float 1"
-        "center 0, match:class ^(kicad)$, match:float 1"
+        "match:class ^(kicad)$, match:float true, size 900 700"
+        "match:class ^(kicad)$, match:float true, center on"
 
-        "float on, match:class ^(org.freecad.FreeCAD)$, match:title !^(FreeCAD)$"
-        "center 0, match:class ^(org.freecad.FreeCAD)$, match:float 1"
+        "match:class ^(org.freecad.FreeCAD)$, match:title ^(?!FreeCAD$).*$, float on"
+        "match:class ^(org.freecad.FreeCAD)$, match:float true, center on"
       ];
 
       exec-once = [

@@ -8,26 +8,38 @@
       mainBar = {
         layer = "top";
         position = "top";
-        height = 32;
-        spacing = 8;
+        margin-top = 2;
+        margin-bottom = 0;
+        margin-left = 10;
+        margin-right = 10;
+        spacing = 4;
 
-        modules-left = [ "hyprland/workspaces" "hyprland/window" ];
+        modules-left = [ "hyprland/workspaces" ];
         modules-center = [ "clock" ];
-        modules-right = [ "pulseaudio" "network" "cpu" "memory" "battery" "tray" ];
+        modules-right = [ "hyprland/language" "backlight" "pulseaudio" "network" "cpu" "memory" "battery" "tray" ];
 
         "hyprland/workspaces" = {
-          format = "{name}";
+          format = "{icon}";
+          format-icons = {
+            "1" = "1";
+            "2" = "2";
+            "3" = "3";
+            "4" = "4";
+            "5" = "5";
+            "6" = "6";
+            "7" = "7";
+            "8" = "8";
+            "9" = "9";
+            "10" = "0";
+          };
           on-click = "activate";
-        };
-
-        "hyprland/window" = {
-          max-length = 50;
-          separate-outputs = true;
+          sort-by-number = true;
         };
 
         clock = {
-          format = "{:%Y-%m-%d %H:%M}";
-          format-alt = "{:%A, %B %d, %Y (%R)}";
+          format = "󰥔  {:%a %b %d  %H:%M}";
+          format-alt = "󰥔  {:%Y-%m-%d  %H:%M:%S}";
+          interval = 1;
           tooltip-format = "<tt><small>{calendar}</small></tt>";
           calendar = {
             mode = "year";
@@ -44,14 +56,26 @@
           };
         };
 
+        "hyprland/language" = {
+          format = "󰌌  {}";
+          format-en = "EN";
+          format-no = "NO";
+        };
+
+        backlight = {
+          format = "{icon} {percent}%";
+          format-icons = [ "󰃞" "󰃟" "󰃠" ];
+          tooltip = false;
+        };
+
         cpu = {
-          format = "CPU {usage}%";
+          format = "󰍛  {usage}%";
           tooltip = true;
           interval = 2;
         };
 
         memory = {
-          format = "MEM {}%";
+          format = "󰘚  {}%";
           interval = 2;
         };
 
@@ -60,83 +84,128 @@
             warning = 30;
             critical = 15;
           };
-          format = "BAT {capacity}%";
-          format-charging = "CHG {capacity}%";
-          format-plugged = "PLG {capacity}%";
-          format-icons = [ "" "" "" "" "" ];
+          format = "{icon}  {capacity}%";
+          format-charging = "󰂄  {capacity}%";
+          format-plugged = "󰚥  {capacity}%";
+          format-icons = [ "󰁺" "󰁻" "󰁼" "󰁽" "󰁾" "󰁿" "󰂀" "󰂁" "󰂂" "󰁹" ];
         };
 
         network = {
-          format-wifi = "WIFI {signalStrength}%";
-          format-ethernet = "ETH {ipaddr}";
-          format-disconnected = "NET off";
+          format-wifi = "󰤨  {signalStrength}%";
+          format-ethernet = "󰈀  {ipaddr}";
+          format-disconnected = "󰤭  off";
           tooltip-format = "{ifname}: {ipaddr}/{cidr}\n{essid}";
           on-click = "nm-connection-editor";
         };
 
         pulseaudio = {
-          format = "VOL {volume}%";
-          format-muted = "MUTE";
+          format = "{icon}  {volume}%";
+          format-muted = "󰖁  mute";
+          format-icons = {
+            default = [ "󰕿" "󰖀" "󰕾" ];
+          };
           on-click = "pavucontrol";
         };
 
         tray = {
-          spacing = 10;
+          spacing = 8;
         };
       };
     };
 
     style = ''
       * {
-        font-family: "JetBrains Mono", "Font Awesome 6 Free";
+        font-family: "JetBrains Mono Nerd Font", "JetBrains Mono", "Font Awesome 6 Free";
         font-size: 13px;
         min-height: 0;
       }
 
       window#waybar {
-        background: rgba(30, 30, 46, 0.9);
+        background: transparent;
         color: #cdd6f4;
+      }
+
+      tooltip {
+        background: #1e1e2e;
+        border: 1px solid #45475a;
+        border-radius: 10px;
+      }
+
+      tooltip label {
+        color: #cdd6f4;
+      }
+
+      /* ---- Left ---- */
+
+      #workspaces {
+        background: #1e1e2e;
+        border-radius: 12px;
+        padding: 0 4px;
+        margin: 2px 0;
       }
 
       #workspaces button {
-        padding: 0 8px;
+        padding: 0 6px;
         color: #6c7086;
         background: transparent;
         border: none;
-        border-radius: 0;
+        border-radius: 10px;
+        min-width: 20px;
+        transition: all 0.2s ease;
       }
 
       #workspaces button.active {
-        color: #cdd6f4;
-        background: #45475a;
-        border-radius: 4px;
+        color: #1e1e2e;
+        background: #cba6f7;
+        border-radius: 10px;
       }
 
       #workspaces button:hover {
-        background: #313244;
-        border-radius: 4px;
+        color: #cdd6f4;
+        background: #45475a;
+        border-radius: 10px;
       }
 
-      #window {
-        padding: 0 10px;
-        color: #a6adc8;
+      /* ---- Center ---- */
+
+      #clock {
+        background: #1e1e2e;
+        color: #f9e2af;
+        border-radius: 12px;
+        padding: 0 14px;
+        margin: 2px 0;
+        font-weight: bold;
       }
 
-      #clock,
+      /* ---- Right modules ---- */
+
+      #language,
+      #backlight,
       #battery,
       #cpu,
       #memory,
       #network,
-      #pulseaudio,
-      #tray {
-        padding: 0 10px;
-        margin: 4px 2px;
-        background: #313244;
-        border-radius: 4px;
+      #pulseaudio {
+        background: #1e1e2e;
+        border-radius: 12px;
+        padding: 0 12px;
+        margin: 2px 2px;
       }
 
-      #clock {
+      #language {
+        color: #f5c2e7;
+      }
+
+      #backlight {
         color: #f9e2af;
+      }
+
+      #cpu {
+        color: #89b4fa;
+      }
+
+      #memory {
+        color: #cba6f7;
       }
 
       #battery {
@@ -153,14 +222,11 @@
 
       #battery.critical:not(.charging) {
         color: #f38ba8;
+        animation: blink 1s linear infinite;
       }
 
-      #cpu {
-        color: #89b4fa;
-      }
-
-      #memory {
-        color: #cba6f7;
+      @keyframes blink {
+        to { color: #cdd6f4; }
       }
 
       #network {
@@ -172,7 +238,7 @@
       }
 
       #pulseaudio {
-        color: #f9e2af;
+        color: #fab387;
       }
 
       #pulseaudio.muted {
@@ -180,7 +246,10 @@
       }
 
       #tray {
-        background: transparent;
+        background: #1e1e2e;
+        border-radius: 12px;
+        padding: 0 10px;
+        margin: 2px 0;
       }
 
       #tray > .passive {
@@ -190,6 +259,7 @@
       #tray > .needs-attention {
         -gtk-icon-effect: highlight;
         background: #f38ba8;
+        border-radius: 10px;
       }
     '';
   };
