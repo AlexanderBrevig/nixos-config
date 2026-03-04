@@ -4,7 +4,8 @@
   wayland.windowManager.hyprland = {
     enable = true;
     package = inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.hyprland;
-    
+    systemd.enable = false;
+
     settings = {
       monitor = [
         "DP-2, preferred, -760x0, 1"
@@ -149,15 +150,15 @@
       ];
 
       exec-once = [
-        "[workspace special:terminal silent] wezterm start --class scratchpad"
-        "waybar > /dev/null 2>&1"
-        "dunst"
-        "hyprpaper"
-        "nm-applet"
-        "blueman-applet"
+        "[workspace special:terminal silent] uwsm app -- wezterm start --class scratchpad"
+        "uwsm app -- waybar"
+        "uwsm app -- dunst"
+        "uwsm app -- hyprpaper"
+        "uwsm app -- nm-applet"
+        "uwsm app -- blueman-applet"
         "wl-paste --type text --watch cliphist store"
         "wl-paste --type image --watch cliphist store"
-        "/run/current-system/sw/libexec/polkit-gnome-authentication-agent-1"
+        "uwsm app -- /run/current-system/sw/libexec/polkit-gnome-authentication-agent-1"
       ];
     };
   };

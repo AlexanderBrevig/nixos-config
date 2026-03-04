@@ -3,18 +3,10 @@
 {
   programs.hyprland = {
     enable = true;
+    withUWSM = true;
     package = inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.hyprland;
     portalPackage = inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.xdg-desktop-portal-hyprland;
     xwayland.enable = true;
-  };
-
-  programs.uwsm = {
-    enable = true;
-    waylandCompositors.hyprland = {
-      prettyName = "Hyprland";
-      comment = "Hyprland compositor managed by UWSM";
-      binPath = "${inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.hyprland}/bin/Hyprland";
-    };
   };
 
   xdg.portal = {
@@ -54,9 +46,8 @@
 
   environment = {
     sessionVariables = {
-      XDG_SESSION_TYPE = "wayland";
-      XDG_SESSION_DESKTOP = "Hyprland";
-      XDG_CURRENT_DESKTOP = "Hyprland";
+      # XDG_SESSION_TYPE, XDG_SESSION_DESKTOP, XDG_CURRENT_DESKTOP
+      # are managed by UWSM — do not set them here
 
       GSETTINGS_SCHEMA_DIR = "${pkgs.gtk3}/share/gsettings-schemas/${pkgs.gtk3.name}/glib-2.0/schemas";
       QT_QPA_PLATFORM = "wayland;xcb";
@@ -85,7 +76,6 @@
         loginBackground = false;
       })
     ] ++ (with pkgs; [
-      uwsm
       wayland
       wayland-protocols
       wayland-utils
@@ -119,6 +109,7 @@
       imv
       mpv
       zathura
+      bambu-studio
     ]);
   };
 
