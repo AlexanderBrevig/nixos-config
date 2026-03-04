@@ -24,7 +24,10 @@
     firewall = {
       enable = true;
       allowedTCPPorts = [ 22 ];
-      allowedUDPPorts = [ ];
+      allowedUDPPorts = [ 1990 2021 ];
+      extraCommands = ''
+        iptables -I INPUT -m pkttype --pkt-type multicast -j ACCEPT
+      '';
     };
   };
 
@@ -90,6 +93,8 @@
     bluetooth.enable = true;
     bluetooth.powerOnBoot = true;
   };
+
+  services.flatpak.enable = true;
 
   services.pulseaudio.enable = false;
 

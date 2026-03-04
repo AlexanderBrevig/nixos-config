@@ -109,7 +109,8 @@
       imv
       mpv
       zathura
-      bambu-studio
+      reaper
+      obs-studio
     ]);
   };
 
