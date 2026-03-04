@@ -131,10 +131,10 @@
         "float on, match:class ^(blueman-manager)$"
         "float on, match:class ^(nm-applet)$"
         "float on, match:class ^(flameshot)$"
-        "noanim on, match:class ^(flameshot)$"
+        "no_anim on, match:class ^(flameshot)$"
         "move 0 0, match:class ^(flameshot)$"
         "pin on, match:class ^(flameshot)$"
-        "suppressevent fullscreen, match:class ^(flameshot)$"
+        "suppress_event fullscreen, match:class ^(flameshot)$"
 
         "float on, match:class ^(scratchpad)$"
 
