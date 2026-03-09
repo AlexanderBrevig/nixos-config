@@ -67,7 +67,7 @@
       ${lib.optionalString config.programs.zoxide.enable "zoxide init fish | source"}
       ${lib.optionalString config.programs.starship.enable "starship init fish | source"}
 
-      ${if config.programs.helix.enable then "set -gx EDITOR helix"
+      ${if config.programs.helix.enable then "set -gx EDITOR hx"
         else "set -gx EDITOR nano"}
 
       set -gx PATH ~/.cargo/bin ~/.nix-profile/bin $PATH
