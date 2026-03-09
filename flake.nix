@@ -31,6 +31,7 @@
           modules = [
             ./hosts/abasus.nix
             ./modules/shared.nix
+            ./modules/desktop.nix
             ./modules/hyprland.nix
 
             home-manager.nixosModules.home-manager
@@ -50,6 +51,7 @@
           modules = [
             ./hosts/abdell.nix
             ./modules/shared.nix
+            ./modules/desktop.nix
             ./modules/hyprland.nix
 
             home-manager.nixosModules.home-manager

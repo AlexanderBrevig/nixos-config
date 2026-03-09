@@ -70,7 +70,7 @@
       ${if config.programs.helix.enable then "set -gx EDITOR helix"
         else "set -gx EDITOR nano"}
 
-      set -gx PATH ~/.nix-profile/bin $PATH
+      set -gx PATH ~/.cargo/bin ~/.nix-profile/bin $PATH
 
       set -gx LS_COLORS (${pkgs.vivid}/bin/vivid generate catppuccin-mocha)
 

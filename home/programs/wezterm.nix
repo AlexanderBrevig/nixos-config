@@ -22,8 +22,8 @@
       config.scrollback_lines = 10000
 
       config.keys = {
-        {key = 'd', mods = 'CTRL|SHIFT', action = wezterm.action.SplitHorizontal{domain = 'CurrentPaneDomain'}},
-        {key = 'd', mods = 'CTRL', action = wezterm.action.SplitVertical{domain = 'CurrentPaneDomain'}},
+        {key = 'h', mods = 'CTRL', action = wezterm.action.SplitHorizontal{domain = 'CurrentPaneDomain'}},
+        {key = 'v', mods = 'CTRL', action = wezterm.action.SplitVertical{domain = 'CurrentPaneDomain'}},
 
         {key = 'h', mods = 'CTRL|SHIFT', action = wezterm.action.ActivatePaneDirection 'Left'},
         {key = 'j', mods = 'CTRL|SHIFT', action = wezterm.action.ActivatePaneDirection 'Down'},

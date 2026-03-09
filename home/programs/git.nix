@@ -7,6 +7,8 @@
     ignores = [
       ".direnv"
       ".claude"
+      "flake.nix"
+      "flake.lock"
       "CLAUDE.md"
     ];
 

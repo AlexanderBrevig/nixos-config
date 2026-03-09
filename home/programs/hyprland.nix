@@ -158,7 +158,7 @@
         "uwsm app -- blueman-applet"
         "wl-paste --type text --watch cliphist store"
         "wl-paste --type image --watch cliphist store"
-        "uwsm app -- /run/current-system/sw/libexec/polkit-gnome-authentication-agent-1"
+        "uwsm app -- ${pkgs.polkit_gnome}/libexec/polkit-gnome-authentication-agent-1"
       ];
     };
   };
