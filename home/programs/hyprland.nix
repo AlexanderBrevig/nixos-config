@@ -8,8 +8,9 @@
 
     settings = {
       monitor = [
-        "DP-2, preferred, -760x0, 1"
-        "eDP-1, preferred, 0x1440, 1"
+        "eDP-1, preferred, 0x720, 1"
+        "HDMI-A-1, preferred, 1920x0, 1"
+        "DP-3, preferred, 4480x0, 1"
         ", preferred, auto, 1"
       ];
 
