@@ -23,6 +23,7 @@
 
   home.packages = with pkgs; [
     git
+    gh
     just
     cmake
     gnumake

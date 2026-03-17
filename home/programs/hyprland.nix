@@ -1,5 +1,55 @@
 { config, pkgs, lib, inputs, ... }:
 
+let
+  jq = "${pkgs.jq}/bin/jq";
+
+  monitorLayout = pkgs.writeShellScript "monitor-layout" ''
+    monitors=$(hyprctl monitors -j)
+    has_hdmi=$(echo "$monitors" | ${jq} -r '.[] | select(.name == "HDMI-A-1") | .name')
+    has_dp=$(echo "$monitors" | ${jq} -r '.[] | select(.name == "DP-3") | .name')
+    ext_count=$(echo "$monitors" | ${jq} '[.[] | select(.name != "eDP-1")] | length')
+
+    if [[ -n "$has_hdmi" && -n "$has_dp" ]]; then
+      # Home setup: laptop left, HDMI middle, DP right
+      hyprctl keyword monitor "eDP-1, preferred, 0x720, 1"
+      hyprctl keyword monitor "HDMI-A-1, preferred, 1920x0, 1"
+      hyprctl keyword monitor "DP-3, preferred, 4480x0, 1"
+    elif (( ext_count == 1 )); then
+      # Single external: vertical layout, external on top centered, laptop below
+      ext_name=$(echo "$monitors" | ${jq} -r '.[] | select(.name != "eDP-1") | .name')
+      ext_width=$(echo "$monitors" | ${jq} -r '.[] | select(.name != "eDP-1") | .width')
+      ext_height=$(echo "$monitors" | ${jq} -r '.[] | select(.name != "eDP-1") | .height')
+      edp_width=$(echo "$monitors" | ${jq} -r '.[] | select(.name == "eDP-1") | .width')
+
+      if (( ext_width >= edp_width )); then
+        offset=$(( (ext_width - edp_width) / 2 ))
+        hyprctl keyword monitor "$ext_name, preferred, 0x0, 1"
+        hyprctl keyword monitor "eDP-1, preferred, ''${offset}x''${ext_height}, 1"
+      else
+        offset=$(( (edp_width - ext_width) / 2 ))
+        hyprctl keyword monitor "$ext_name, preferred, ''${offset}x0, 1"
+        hyprctl keyword monitor "eDP-1, preferred, 0x''${ext_height}, 1"
+      fi
+    fi
+  '';
+
+  monitorListener = pkgs.writeShellScript "monitor-listener" ''
+    # Apply layout on startup
+    sleep 1
+    ${monitorLayout}
+
+    # Listen for monitor hotplug events
+    ${pkgs.socat}/bin/socat -U - UNIX-CONNECT:"$XDG_RUNTIME_DIR/hypr/$HYPRLAND_INSTANCE_SIGNATURE/.socket2.sock" | while read -r line; do
+      case "$line" in
+        monitoradded*|monitorremoved*)
+          sleep 1
+          ${monitorLayout}
+          ;;
+      esac
+    done
+  '';
+in
+
 {
   wayland.windowManager.hyprland = {
     enable = true;
@@ -151,6 +201,7 @@
       ];
 
       exec-once = [
+        "${monitorListener}"
         "[workspace special:terminal silent] uwsm app -- wezterm start --class scratchpad"
         "uwsm app -- waybar"
         "uwsm app -- dunst"
