@@ -25,14 +25,16 @@
     in
     {
       nixosConfigurations = {
-        abasus = nixpkgs.lib.nixosSystem {
+        # New machines
+        abthin = nixpkgs.lib.nixosSystem {
           inherit system;
           specialArgs = { inherit inputs; };
           modules = [
-            ./hosts/abasus.nix
+            ./hosts/abthin.nix
             ./modules/shared.nix
             ./modules/desktop.nix
             ./modules/hyprland.nix
+            ./modules/connectivity.nix
 
             home-manager.nixosModules.home-manager
             {
@@ -45,13 +47,44 @@
           ];
         };
 
-        abdell = nixpkgs.lib.nixosSystem {
+        abmain = nixpkgs.lib.nixosSystem {
           inherit system;
           specialArgs = { inherit inputs; };
           modules = [
-            ./hosts/abdell.nix
+            ./hosts/abmain.nix
             ./modules/shared.nix
+            ./modules/shared-workstation.nix
             ./modules/desktop.nix
+            ./modules/desktop-workstation.nix
+            ./modules/hyprland.nix
+            ./modules/connectivity.nix
+
+            home-manager.nixosModules.home-manager
+            {
+              home-manager.useGlobalPkgs = true;
+              home-manager.useUserPackages = true;
+              home-manager.backupFileExtension = "backup";
+              home-manager.extraSpecialArgs = { inherit inputs; };
+              home-manager.users.ab = {
+                imports = [
+                  ./home/home.nix
+                  ./home/home-workstation.nix
+                ];
+              };
+            }
+          ];
+        };
+
+        # Legacy machines
+        abasus = nixpkgs.lib.nixosSystem {
+          inherit system;
+          specialArgs = { inherit inputs; };
+          modules = [
+            ./hosts/abasus.nix
+            ./modules/shared.nix
+            ./modules/shared-workstation.nix
+            ./modules/desktop.nix
+            ./modules/desktop-workstation.nix
             ./modules/hyprland.nix
 
             home-manager.nixosModules.home-manager
@@ -60,7 +93,39 @@
               home-manager.useUserPackages = true;
               home-manager.backupFileExtension = "backup";
               home-manager.extraSpecialArgs = { inherit inputs; };
-              home-manager.users.ab = import ./home/home.nix;
+              home-manager.users.ab = {
+                imports = [
+                  ./home/home.nix
+                  ./home/home-workstation.nix
+                ];
+              };
+            }
+          ];
+        };
+
+        abdell = nixpkgs.lib.nixosSystem {
+          inherit system;
+          specialArgs = { inherit inputs; };
+          modules = [
+            ./hosts/abdell.nix
+            ./modules/shared.nix
+            ./modules/shared-workstation.nix
+            ./modules/desktop.nix
+            ./modules/desktop-workstation.nix
+            ./modules/hyprland.nix
+
+            home-manager.nixosModules.home-manager
+            {
+              home-manager.useGlobalPkgs = true;
+              home-manager.useUserPackages = true;
+              home-manager.backupFileExtension = "backup";
+              home-manager.extraSpecialArgs = { inherit inputs; };
+              home-manager.users.ab = {
+                imports = [
+                  ./home/home.nix
+                  ./home/home-workstation.nix
+                ];
+              };
             }
           ];
         };

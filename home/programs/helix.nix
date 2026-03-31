@@ -68,6 +68,16 @@
           name = "python";
           auto-format = true;
         }
+        {
+          name = "zshot";
+          scope = "source.zshot";
+          file-types = ["zshot" "inzshot"];
+          comment-token = "#";
+          indent = {
+            tab-width = 2;
+            unit = "  ";
+          };
+        }
       ];
     };
   };

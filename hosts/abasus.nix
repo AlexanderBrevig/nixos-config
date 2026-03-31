@@ -52,9 +52,22 @@
 
   services.xserver.videoDrivers = [ "nvidia" ];
 
+  environment.sessionVariables.LIBVA_DRIVER_NAME = "iHD";
+
   services = {
     thermald.enable = true;
     fwupd.enable = true;
+
+    printing = {
+      enable = true;
+      drivers = [ pkgs.hplip ];
+    };
+
+    avahi = {
+      enable = true;
+      nssmdns4 = true;
+      openFirewall = true;
+    };
   };
 
   environment.systemPackages = with pkgs; [
@@ -66,6 +79,7 @@
     nvtopPackages.nvidia
     vulkan-tools
     mesa-demos
+    davinci-resolve-studio
   ];
 
   powerManagement = {

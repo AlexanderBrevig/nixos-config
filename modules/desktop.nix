@@ -11,15 +11,6 @@
 
     dbus.enable = true;
 
-    pipewire.extraConfig.pipewire."92-low-latency" = {
-      context.properties = {
-        default.clock.rate = 48000;
-        default.clock.quantum = 32;
-        default.clock.min-quantum = 32;
-        default.clock.max-quantum = 32;
-      };
-    };
-
     udev.extraRules = ''
       ACTION=="add", SUBSYSTEM=="backlight", KERNEL=="intel_backlight", RUN+="${pkgs.coreutils}/bin/chgrp video /sys/class/backlight/%k/brightness"
       ACTION=="add", SUBSYSTEM=="backlight", KERNEL=="intel_backlight", RUN+="${pkgs.coreutils}/bin/chmod g+w /sys/class/backlight/%k/brightness"
@@ -47,7 +38,6 @@
       SDL_VIDEODRIVER = "wayland";
       _JAVA_AWT_WM_NONREPARENTING = "1";
       MOZ_ENABLE_WAYLAND = "1";
-      LIBVA_DRIVER_NAME = "iHD";
       FLAMESHOT_BACKEND = "grim";
     } // (lib.optionalAttrs (builtins.elem "nvidia" (config.services.xserver.videoDrivers or [])) {
       GBM_BACKEND = "nvidia-drm";
@@ -73,8 +63,6 @@
 
       grim
       slurp
-      flameshot
-      wf-recorder
 
       nautilus
       networkmanagerapplet
@@ -85,9 +73,6 @@
       imv
       mpv
       zathura
-      reaper
-      obs-studio
-      kdePackages.kdenlive
 
       xdg-desktop-portal-gtk
     ]);

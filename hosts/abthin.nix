@@ -5,11 +5,10 @@
     /etc/nixos/hardware-configuration.nix
   ];
 
-  networking.hostName = "abdell";
+  networking.hostName = "abthin";
 
   boot.kernelParams = [
-    "i915.enable_fbc=1"
-    "intel_pstate=active"
+    "amd_pstate=active"
   ];
 
   hardware = {
@@ -18,23 +17,16 @@
       enable32Bit = true;
 
       extraPackages = with pkgs; [
-        intel-media-driver
-        intel-vaapi-driver
-        libva-vdpau-driver
-        libvdpau-va-gl
         vulkan-validation-layers
         vulkan-tools
       ];
     };
 
-    cpu.intel.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
+    cpu.amd.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
     enableRedistributableFirmware = true;
   };
 
-  environment.sessionVariables.LIBVA_DRIVER_NAME = "iHD";
-
   services = {
-    thermald.enable = false;
     fwupd.enable = true;
   };
 
@@ -43,7 +35,6 @@
     powertop
     acpi
     upower
-    intel-gpu-tools
     vulkan-tools
     mesa-demos
   ];
@@ -54,5 +45,4 @@
     powersave = true;
     scanRandMacAddress = true;
   };
-
 }

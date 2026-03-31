@@ -20,6 +20,7 @@
       (lib.mkIf config.programs.git.enable {
         g = "git";
         gs = "git status";
+        gsw = "git switch";
         ga = "git add";
         gc = "git commit";
         gca = "git commit --amend";
@@ -275,6 +276,32 @@
             docker stop $running
           else
             echo "No running containers to stop"
+          end
+        '';
+      };
+
+      gcw = {
+        description = "Git clone as bare repo with worktrees";
+        body = ''
+          if test -z "$argv[1]"
+            echo "Usage: gcw <repository-url> [branch1] [branch2] ..."
+            echo "Example: gcw git@github.com:user/repo.git main feat1"
+            return 1
+          end
+
+          set repo_name (basename "$argv[1]" .git)
+          mkdir -p "$repo_name"
+          cd "$repo_name"
+
+          git clone --bare "$argv[1]" .bare
+          echo "gitdir: ./.bare" > .git
+
+          if test (count $argv) -ge 2
+            for branch in $argv[2..-1]
+              git worktree add "$branch"
+            end
+          else
+            git worktree add main
           end
         '';
       };

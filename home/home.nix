@@ -25,14 +25,6 @@
     git
     gh
     just
-    cmake
-    gnumake
-    gcc
-    clang-tools
-
-    rust-analyzer
-    gopls
-    pyright
 
     wezterm
     starship
@@ -47,32 +39,13 @@
 
     google-chrome
 
-    slack
-    discord
-
-    spotify
-
-    kicad
-    blender
-    inkscape
-    gimp
-    # freecad  # TODO: broken in nixpkgs (boost issue)
-
-    docker-compose
-    kubectl
-    terraform
     claude-code
+    gemini-cli
 
-    thunar
-    thunar-volman  # auto-mount USB in Thunar
-    ranger
     fzf
     tree
     htop
     # btop  # managed by programs.btop
-
-    ffmpeg
-    imagemagick
 
     nmap
     wget
@@ -87,8 +60,6 @@
 
     nerd-fonts.jetbrains-mono
     nerd-fonts.fira-code
-
-    nwg-displays
   ];
 
   services.udiskie = {

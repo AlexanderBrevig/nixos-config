@@ -53,7 +53,8 @@ in
 {
   wayland.windowManager.hyprland = {
     enable = true;
-    package = inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.hyprland;
+    package = null;
+    portalPackage = null;
     systemd.enable = false;
 
     settings = {
