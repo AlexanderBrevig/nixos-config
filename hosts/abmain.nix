@@ -39,6 +39,11 @@
 
   services = {
     fwupd.enable = true;
+
+    ollama = {
+      enable = true;
+      package = pkgs.ollama-cuda;
+    };
   };
 
   environment.systemPackages = with pkgs; [
@@ -46,6 +51,7 @@
     nvtopPackages.nvidia
     vulkan-tools
     mesa-demos
+    davinci-resolve
     davinci-resolve-studio
   ];
 }

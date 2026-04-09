@@ -120,12 +120,13 @@ in
 
       bind = [
         "SUPER, Return, exec, wezterm"
+        "SUPER, B, exec, wezterm --config 'font_size=20.0' --config 'window_background_opacity=1.0' start"
         "SUPER SHIFT, Return, togglespecialworkspace, terminal"
         "SUPER, Q, killactive"
         "SUPER SHIFT, Q, exec, bash -c 'echo -e \"Logout\\nCancel\" | fuzzel --dmenu -p \"Logout? \" | grep -q Logout && hyprctl dispatch exit'"
         "SUPER, E, exec, nautilus"
         "SUPER, V, togglefloating"
-        "SUPER, P, togglesplit"
+        "SUPER, P, layoutmsg, togglesplit"
         "SUPER, F, fullscreen"
         "SUPER, D, exec, fuzzel"
 
@@ -175,6 +176,8 @@ in
         "SUPER SHIFT, 8, movetoworkspace, 8"
         "SUPER SHIFT, 9, movetoworkspace, 9"
         "SUPER SHIFT, 0, movetoworkspace, 10"
+
+        "SUPER, R, submap, resize"
       ];
 
       bindm = [
@@ -214,5 +217,20 @@ in
         "uwsm app -- ${pkgs.polkit_gnome}/libexec/polkit-gnome-authentication-agent-1"
       ];
     };
+
+    extraConfig = ''
+      submap = resize
+      binde = , right, resizeactive, 30 0
+      binde = , left, resizeactive, -30 0
+      binde = , up, resizeactive, 0 -30
+      binde = , down, resizeactive, 0 30
+      binde = , L, resizeactive, 30 0
+      binde = , H, resizeactive, -30 0
+      binde = , K, resizeactive, 0 -30
+      binde = , J, resizeactive, 0 30
+      bind = , escape, submap, reset
+      bind = , Return, submap, reset
+      submap = reset
+    '';
   };
 }

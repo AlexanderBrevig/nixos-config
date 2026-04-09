@@ -34,7 +34,6 @@
             ./modules/shared.nix
             ./modules/desktop.nix
             ./modules/hyprland.nix
-            ./modules/connectivity.nix
 
             home-manager.nixosModules.home-manager
             {
@@ -57,7 +56,6 @@
             ./modules/desktop.nix
             ./modules/desktop-workstation.nix
             ./modules/hyprland.nix
-            ./modules/connectivity.nix
 
             home-manager.nixosModules.home-manager
             {

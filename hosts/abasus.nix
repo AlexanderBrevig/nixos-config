@@ -58,6 +58,11 @@
     thermald.enable = true;
     fwupd.enable = true;
 
+    ollama = {
+      enable = true;
+      package = pkgs.ollama-cuda;
+    };
+
     printing = {
       enable = true;
       drivers = [ pkgs.hplip ];
@@ -79,6 +84,7 @@
     nvtopPackages.nvidia
     vulkan-tools
     mesa-demos
+    davinci-resolve
     davinci-resolve-studio
   ];
 

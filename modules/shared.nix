@@ -1,6 +1,8 @@
 { config, pkgs, lib, inputs, ... }:
 
 {
+  imports = [ ./connectivity.nix ];
+
   nixpkgs.config.allowUnfree = true;
 
   nixpkgs.overlays = [
@@ -125,6 +127,12 @@
       ];
     };
   };
+
+  environment.etc."odbcinst.ini".text = ''
+    [SQLite3 ODBC Driver]
+    Description = ODBC driver for SQLite
+    Driver = ${pkgs.unixODBCDrivers.sqlite}/lib/libsqlite3odbc.so
+  '';
 
   environment.systemPackages = with pkgs; [
     vim
