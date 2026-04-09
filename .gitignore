@@ -1,3 +1,5 @@
+!flake.nix
+!flake.lock
 **/TODO.md
 /result
 
