@@ -90,7 +90,9 @@
 
   services = {
     dbus.enable = true;
-    
+
+    fwupd.enable = true;
+
     printing.enable = true;
 
     # Auto-mount USB drives
