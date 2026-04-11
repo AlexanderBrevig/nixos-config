@@ -75,6 +75,7 @@
   };
 
   environment.systemPackages = with pkgs; [
+    moonlight-qt
     lm_sensors
     powertop
     acpi

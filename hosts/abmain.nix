@@ -44,6 +44,12 @@
       enable = true;
       package = pkgs.ollama-cuda;
     };
+
+    sunshine = {
+      enable = true;
+      capSysAdmin = true;
+      openFirewall = true;
+    };
   };
 
   environment.systemPackages = with pkgs; [
