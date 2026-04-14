@@ -1,6 +1,8 @@
 { config, pkgs, lib, inputs, ... }:
 
 {
+  xdg.configFile."helix/runtime/queries/zshot".source = "/home/ab/github.com/tree-sitter-zshot/queries";
+
   programs.helix = {
     enable = true;
     package = inputs.helix.packages.${pkgs.stdenv.hostPlatform.system}.helix;
@@ -29,6 +31,16 @@
     };
     
     languages = {
+      grammar = [
+        {
+          name = "zshot";
+          source = {
+            git = "https://github.com/AlexanderBrevig/tree-sitter-zshot";
+            rev = "eef1ad9881aacb5d8205cd2ffe939c4cfef9d113";
+          };
+        }
+      ];
+
       language-server = {
         rust-analyzer = {
           command = "rust-analyzer";
