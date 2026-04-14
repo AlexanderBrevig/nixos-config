@@ -41,7 +41,12 @@
               home-manager.useUserPackages = true;
               home-manager.backupFileExtension = "backup";
               home-manager.extraSpecialArgs = { inherit inputs; };
-              home-manager.users.ab = import ./home/home.nix;
+              home-manager.users.ab = {
+                imports = [
+                  ./home/home.nix
+                  ./home/monitors-stacked.nix
+                ];
+              };
             }
           ];
         };
@@ -95,6 +100,7 @@
                 imports = [
                   ./home/home.nix
                   ./home/home-workstation.nix
+                  ./home/monitors-stacked.nix
                 ];
               };
             }

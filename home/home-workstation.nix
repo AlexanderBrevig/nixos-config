@@ -13,11 +13,6 @@
     gopls
     pyright
 
-    # Communication & media
-    slack
-    discord
-    spotify
-
     # Creative & engineering
     kicad
     blender

@@ -67,4 +67,15 @@
     powersave = true;
     scanRandMacAddress = true;
   };
+
+  # Override hardware-configuration.nix swap: use randomEncryption instead of
+  # a separate LUKS device that stalls boot waiting for a second passphrase.
+  # Trade-off: hibernation (suspend-to-disk) will not work, but this system
+  # uses suspend-to-RAM (s2idle) which is unaffected.
+  swapDevices = lib.mkForce [
+    {
+      device = "/dev/disk/by-partuuid/cfd28bfe-a0fe-4aba-8b26-b0fa37f9b2f0";
+      randomEncryption.enable = true;
+    }
+  ];
 }

@@ -41,6 +41,10 @@
 
     claude-code
     gemini-cli
+     
+    slack
+    discord
+    spotify
 
     fzf
     tree
