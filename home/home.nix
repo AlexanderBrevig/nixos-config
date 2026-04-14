@@ -79,6 +79,8 @@
     settings = {
       color_theme = "catppuccin_mocha";
       theme_background = false;
+      shown_boxes = "cpu mem net proc gpu0";
+      show_gpu_info = "On";
     };
   };
 
