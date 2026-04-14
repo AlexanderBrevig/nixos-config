@@ -44,6 +44,7 @@
      
     slack
     discord
+    signal-desktop
     spotify
 
     fzf
