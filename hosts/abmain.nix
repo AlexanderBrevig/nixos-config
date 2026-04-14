@@ -47,8 +47,32 @@
 
     sunshine = {
       enable = true;
-      capSysAdmin = true;
+      capSysAdmin = false;
       openFirewall = true;
+      settings = {
+        encoder = "vaapi";
+        adapter_name = "/dev/dri/renderD129";
+      };
+    };
+  };
+
+  # Point Sunshine's vaapi at the NVIDIA GPU
+  systemd.user.services.sunshine.environment = {
+    LIBVA_DRIVER_NAME = "nvidia";
+    LD_LIBRARY_PATH = "/run/opengl-driver/lib";
+  };
+
+  # Sunshine needs uinput access for virtual input devices
+  services.udev.extraRules = ''
+    KERNEL=="uinput", SUBSYSTEM=="misc", MODE="0660", GROUP="input", TAG+="uaccess", OPTIONS+="static_node=uinput"
+  '';
+
+  # Mount XFS video drive with nouuid to prevent UUID collision after
+  # hot-unplug/replug (device name changes sda→sdb→sdc but XFS keeps
+  # a stale UUID reference from the previous mount)
+  services.udisks2.settings."mount_options.conf" = {
+    defaults = {
+      xfs_defaults = "nouuid";
     };
   };
 
