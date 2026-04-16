@@ -12,6 +12,7 @@
     "libvirtd"
     "dialout"
     "plugdev"
+    "lp"
   ];
 
   # Create plugdev group (not default on NixOS)

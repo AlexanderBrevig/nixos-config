@@ -40,6 +40,17 @@
   services = {
     fwupd.enable = true;
 
+    printing = {
+      enable = true;
+      drivers = [ pkgs.hplip ];
+    };
+
+    avahi = {
+      enable = true;
+      nssmdns4 = true;
+      openFirewall = true;
+    };
+
     ollama = {
       enable = true;
       package = pkgs.ollama-cuda;

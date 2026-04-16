@@ -91,7 +91,8 @@
 
   home.file.".config/chrome-flags.conf".text = ''
     --ozone-platform=wayland
-    --enable-features=VaapiVideoDecoder,VaapiVideoEncoder
+    --enable-features=VaapiVideoDecoder,VaapiVideoEncoder,VaapiVideoDecodeLinuxGL
+    --disable-features=UseChromeOSDirectVideoDecoder
     --use-gl=egl
   '';
 
@@ -117,6 +118,9 @@
         "x-scheme-handler/https" = "google-chrome.desktop";
         "x-scheme-handler/about" = "google-chrome.desktop";
         "x-scheme-handler/unknown" = "google-chrome.desktop";
+        "x-scheme-handler/bambu" = "com.bambulab.BambuStudio.desktop";
+        "model/3mf" = "com.bambulab.BambuStudio.desktop";
+        "application/x-3mf" = "com.bambulab.BambuStudio.desktop";
       };
     };
   };
