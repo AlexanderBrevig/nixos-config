@@ -21,9 +21,14 @@
       url = "github:sadjow/claude-code-nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    hyprpaper = {
+      url = "github:hyprwm/hyprpaper";
+      inputs.nixpkgs.follows = "hyprland/nixpkgs";
+    };
   };
 
-  outputs = { self, nixpkgs, nixpkgs-stable, home-manager, helix, hyprland, claude-code, ... }@inputs:
+  outputs = { self, nixpkgs, nixpkgs-stable, home-manager, helix, hyprland, claude-code, hyprpaper, ... }@inputs:
     let
       system = "x86_64-linux";
       pkgs = nixpkgs.legacyPackages.${system};

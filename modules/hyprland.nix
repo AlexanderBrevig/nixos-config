@@ -28,8 +28,9 @@
 
   };
 
-  environment.systemPackages = with pkgs; [
-    hyprpaper
+  environment.systemPackages = [
+    inputs.hyprpaper.packages.${pkgs.stdenv.hostPlatform.system}.default
+  ] ++ (with pkgs; [
     hyprlock
     hypridle
     hyprpicker
@@ -39,5 +40,5 @@
 
     fuzzel
     waybar
-  ];
+  ]);
 }

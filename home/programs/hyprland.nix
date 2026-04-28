@@ -177,4 +177,9 @@
       submap = reset
     '';
   };
+
+  home.file.".config/hypr/hyprpaper.conf".text = ''
+    preload = /home/ab/github.com/gnistlab/meta/banner.png
+    wallpaper = ,/home/ab/github.com/gnistlab/meta/banner.png
+  '';
 }
