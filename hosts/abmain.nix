@@ -75,9 +75,12 @@
     LD_LIBRARY_PATH = "/run/opengl-driver/lib";
   };
 
-  # Sunshine needs uinput access for virtual input devices
+  # Sunshine needs uinput access for virtual input devices.
+  # EdgeTX/Radiomaster (incl. TX15) shared HID IDs need hidraw uaccess so
+  # FPV simulators (Liftoff) can read the raw HID interface, not just /dev/input/js*.
   services.udev.extraRules = ''
     KERNEL=="uinput", SUBSYSTEM=="misc", MODE="0660", GROUP="input", TAG+="uaccess", OPTIONS+="static_node=uinput"
+    KERNEL=="hidraw*", ATTRS{idVendor}=="1209", ATTRS{idProduct}=="4f54", TAG+="uaccess"
   '';
 
   # Mount XFS video drive with nouuid to prevent UUID collision after
