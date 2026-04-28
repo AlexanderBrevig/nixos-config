@@ -84,6 +84,7 @@
   services.udisks2.settings."mount_options.conf" = {
     defaults = {
       xfs_defaults = "nouuid";
+      xfs_allow = "nouuid";
     };
   };
 
