@@ -67,6 +67,8 @@
     };
   };
 
+  programs.steam.enable = true;
+
   # Point Sunshine's vaapi at the NVIDIA GPU
   systemd.user.services.sunshine.environment = {
     LIBVA_DRIVER_NAME = "nvidia";
