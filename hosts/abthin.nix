@@ -30,6 +30,16 @@
     fwupd.enable = true;
   };
 
+  users.users.ab.extraGroups = [ "docker" ];
+
+  virtualisation.docker = {
+    enable = true;
+    autoPrune = {
+      enable = true;
+      dates = "weekly";
+    };
+  };
+
   environment.systemPackages = with pkgs; [
     moonlight-qt
     lm_sensors

@@ -11,6 +11,7 @@
     ./programs/ssh.nix
     ./programs/waybar.nix
     ./programs/fuzzel.nix
+    ./programs/hyprpaper.nix
   ];
 
   home = {
@@ -38,6 +39,7 @@
     yq-go
 
     google-chrome
+    kicad
 
     claude-code
     gemini-cli

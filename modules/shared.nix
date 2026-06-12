@@ -9,6 +9,7 @@
     (final: prev: {
       jetbrains-mono = inputs.nixpkgs-stable.legacyPackages.${prev.stdenv.hostPlatform.system}.jetbrains-mono;
     })
+    inputs.claude-code.overlays.default
   ];
   boot = {
     loader = {

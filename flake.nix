@@ -16,9 +16,14 @@
     };
 
     hyprland.url = "github:hyprwm/Hyprland";
+
+    claude-code = {
+      url = "github:sadjow/claude-code-nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
-  outputs = { self, nixpkgs, nixpkgs-stable, home-manager, helix, hyprland, ... }@inputs:
+  outputs = { self, nixpkgs, nixpkgs-stable, home-manager, helix, hyprland, claude-code, ... }@inputs:
     let
       system = "x86_64-linux";
       pkgs = nixpkgs.legacyPackages.${system};

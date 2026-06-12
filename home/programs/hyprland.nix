@@ -61,7 +61,6 @@
       };
 
       dwindle = {
-        pseudotile = true;
         preserve_split = true;
       };
 
@@ -73,7 +72,7 @@
         "SUPER SHIFT, Q, exec, bash -c 'echo -e \"Logout\\nCancel\" | fuzzel --dmenu -p \"Logout? \" | grep -q Logout && hyprctl dispatch exit'"
         "SUPER, E, exec, nautilus"
         "SUPER, V, togglefloating"
-        "SUPER, P, layoutmsg, togglesplit"
+        "SUPER SHIFT, P, pseudo"
         "SUPER, F, fullscreen"
         "SUPER, D, exec, fuzzel"
 
@@ -155,7 +154,6 @@
         "[workspace special:terminal silent] uwsm app -- wezterm start --class scratchpad"
         "uwsm app -- waybar"
         "uwsm app -- dunst"
-        "uwsm app -- hyprpaper"
         "uwsm app -- nm-applet"
         "uwsm app -- blueman-applet"
         "wl-paste --type text --watch cliphist store"
