@@ -41,6 +41,8 @@
   };
 
   environment.systemPackages = with pkgs; [
+    # Android development (whatisaidwas): adb; systemd handles device access
+    android-tools
     moonlight-qt
     lm_sensors
     powertop
