@@ -30,7 +30,9 @@
     fwupd.enable = true;
   };
 
-  users.users.ab.extraGroups = [ "docker" ];
+  # dialout: FC/serial access (Betaflight); the embedded-dev groups otherwise
+  # live in shared-workstation.nix, which this host does not import.
+  users.users.ab.extraGroups = [ "docker" "dialout" ];
 
   virtualisation.docker = {
     enable = true;
@@ -58,6 +60,9 @@
   services.udev.extraRules = ''
     SUBSYSTEM=="power_supply", KERNEL=="AC", ATTR{online}=="0", RUN+="${pkgs.power-profiles-daemon}/bin/powerprofilesctl set power-saver"
     SUBSYSTEM=="power_supply", KERNEL=="AC", ATTR{online}=="1", RUN+="${pkgs.power-profiles-daemon}/bin/powerprofilesctl set balanced"
+    # STM32 DFU bootloader (Betaflight firmware flashing) — not a tty, so
+    # dialout does not cover it
+    SUBSYSTEM=="usb", ATTRS{idVendor}=="0483", ATTRS{idProduct}=="df11", MODE="0664", GROUP="dialout", TAG+="uaccess"
   '';
 
   # Set the right profile at boot based on current AC state.
