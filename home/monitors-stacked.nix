@@ -1,51 +1,34 @@
-{ pkgs, ... }:
+{ ... }:
 
-let
-  jq = "${pkgs.jq}/bin/jq";
-
-  monitorLayout = pkgs.writeShellScript "monitor-layout" ''
-    monitors=$(hyprctl monitors -j)
-    ext_count=$(echo "$monitors" | ${jq} '[.[] | select(.name != "eDP-1")] | length')
-
-    if (( ext_count >= 1 )); then
-      max_ext_height=$(echo "$monitors" | ${jq} '[.[] | select(.name != "eDP-1") | .height] | max')
-      total_ext_width=$(echo "$monitors" | ${jq} '[.[] | select(.name != "eDP-1") | .width] | add')
-      edp_width=$(echo "$monitors" | ${jq} -r '.[] | select(.name == "eDP-1") | .width')
-
-      # Place externals side by side at the top
-      x=0
-      for ext_name in $(echo "$monitors" | ${jq} -r '.[] | select(.name != "eDP-1") | .name'); do
-        hyprctl keyword monitor "$ext_name, preferred, ''${x}x0, 1"
-        ext_w=$(echo "$monitors" | ${jq} -r ".[] | select(.name == \"$ext_name\") | .width")
-        x=$((x + ext_w))
-      done
-
-      # Center laptop below the externals
-      if (( total_ext_width >= edp_width )); then
-        offset=$(( (total_ext_width - edp_width) / 2 ))
-      else
-        offset=$(( (edp_width - total_ext_width) / 2 ))
-      fi
-      hyprctl keyword monitor "eDP-1, preferred, ''${offset}x''${max_ext_height}, 1"
-    fi
-  '';
-
-  monitorListener = pkgs.writeShellScript "monitor-listener" ''
-    sleep 1
-    ${monitorLayout}
-
-    ${pkgs.socat}/bin/socat -U - UNIX-CONNECT:"$XDG_RUNTIME_DIR/hypr/$HYPRLAND_INSTANCE_SIGNATURE/.socket2.sock" | while read -r line; do
-      case "$line" in
-        monitoradded*|monitorremoved*)
-          sleep 1
-          ${monitorLayout}
-          ;;
-      esac
-    done
-  '';
-in
 {
-  wayland.windowManager.hyprland.settings.exec-once = [
-    "${monitorListener}"
-  ];
+  # Place external monitors side by side at the top, laptop centered below
+  wayland.windowManager.hyprland.extraConfig = ''
+    local function layout_monitors(removed)
+      local exts, edp = {}, nil
+      for _, m in ipairs(hl.get_monitors()) do
+        if m.name == "eDP-1" then
+          edp = m
+        elseif m.name ~= removed then
+          table.insert(exts, m)
+        end
+      end
+      if #exts == 0 or not edp then
+        return
+      end
+
+      local x, max_h = 0, 0
+      for _, m in ipairs(exts) do
+        hl.monitor({ output = m.name, mode = "preferred", position = x .. "x0", scale = 1 })
+        x = x + m.width
+        max_h = math.max(max_h, m.height)
+      end
+
+      local offset = math.abs(x - edp.width) // 2
+      hl.monitor({ output = "eDP-1", mode = "preferred", position = offset .. "x" .. max_h, scale = 1 })
+    end
+
+    hl.on("hyprland.start", function() layout_monitors() end)
+    hl.on("monitor.added", function() layout_monitors() end)
+    hl.on("monitor.removed", function(m) layout_monitors(m.name) end)
+  '';
 }
