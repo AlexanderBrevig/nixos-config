@@ -71,6 +71,7 @@
             ./modules/desktop.nix
             ./modules/desktop-workstation.nix
             ./modules/hyprland.nix
+            ./modules/crash-instrumentation.nix
 
             home-manager.nixosModules.home-manager
             {

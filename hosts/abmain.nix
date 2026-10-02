@@ -15,9 +15,15 @@
   hardware = {
     nvidia = {
       modesetting.enable = true;
-      powerManagement.enable = false;
+      # Must stay true: with this false we get silent hard hangs (a lesson
+      # relearned 2026-09-09 — the config had drifted back to false). No
+      # `finegrained` here: that is for Optimus laptops, not a desktop primary GPU.
+      powerManagement.enable = true;
       open = true;
       nvidiaSettings = true;
+      # Keep the GPU initialised even with no X client attached: steadier state
+      # and better error reporting for the ollama/Steam mix on this box.
+      nvidiaPersistenced = true;
     };
 
     graphics = {
@@ -55,31 +61,17 @@
       enable = true;
       package = pkgs.ollama-cuda;
     };
-
-    sunshine = {
-      enable = true;
-      capSysAdmin = false;
-      openFirewall = true;
-      settings = {
-        encoder = "vaapi";
-        adapter_name = "/dev/dri/renderD129";
-      };
-    };
   };
 
   programs.steam.enable = true;
+  # gamemoderun is referenced in Steam launch options for FPV sims; the module
+  # puts it on PATH inside the Steam FHS sandbox. Without this the launch
+  # command fails ("gamemoderun: command not found") and the game exits at once.
+  programs.gamemode.enable = true;
 
-  # Point Sunshine's vaapi at the NVIDIA GPU
-  systemd.user.services.sunshine.environment = {
-    LIBVA_DRIVER_NAME = "nvidia";
-    LD_LIBRARY_PATH = "/run/opengl-driver/lib";
-  };
-
-  # Sunshine needs uinput access for virtual input devices.
   # EdgeTX/Radiomaster (incl. TX15) shared HID IDs need hidraw uaccess so
   # FPV simulators (Liftoff) can read the raw HID interface, not just /dev/input/js*.
   services.udev.extraRules = ''
-    KERNEL=="uinput", SUBSYSTEM=="misc", MODE="0660", GROUP="input", TAG+="uaccess", OPTIONS+="static_node=uinput"
     KERNEL=="hidraw*", ATTRS{idVendor}=="1209", ATTRS{idProduct}=="4f54", TAG+="uaccess"
   '';
 
