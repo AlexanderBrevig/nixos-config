@@ -55,6 +55,12 @@
         },
       })
 
+      -- EdgeTX/Radiomaster FPV transmitter over USB exposes phantom pointer
+      -- devices that pin/yank the cursor to one monitor. Disable them (the
+      -- joystick/gamepad input for sims comes through a separate device).
+      hl.device({ name = "mouse-passthrough",            enabled = false })
+      hl.device({ name = "mouse-passthrough-(absolute)", enabled = false })
+
       hl.curve("myBezier", { type = "bezier", points = { { 0.05, 0.9 }, { 0.1, 1.05 } } })
 
       hl.animation({ leaf = "windows",     enabled = true, speed = 7,  bezier = "myBezier" })
