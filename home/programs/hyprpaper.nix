@@ -7,9 +7,7 @@
   };
 
   xdg.configFile."hypr/hyprpaper.conf".text = ''
-    wallpaper {
-      monitor =
-      path = ${config.home.homeDirectory}/Pictures/moon.png
-    }
+    preload = ${config.home.homeDirectory}/github.com/gnistlab/meta/banner.png
+    wallpaper = ,${config.home.homeDirectory}/github.com/gnistlab/meta/banner.png
   '';
 }

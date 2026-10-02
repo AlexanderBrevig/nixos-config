@@ -37,6 +37,7 @@
     vivid
     jq
     yq-go
+    presenterm
 
     google-chrome
     kicad

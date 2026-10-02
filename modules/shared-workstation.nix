@@ -27,6 +27,8 @@
     ATTRS{product}=="*CMSIS-DAP*", MODE="0666", GROUP="plugdev"
     # ST-Link
     ATTRS{idVendor}=="0483", ATTRS{idProduct}=="3748", MODE="0666", GROUP="plugdev"
+    # STM32 DFU bootloader (Betaflight/INAV flight controller flashing)
+    ATTRS{idVendor}=="0483", ATTRS{idProduct}=="df11", MODE="0666", GROUP="plugdev"
     # J-Link
     ATTRS{idVendor}=="1366", MODE="0666", GROUP="plugdev"
   '';
