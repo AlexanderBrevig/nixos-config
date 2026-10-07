@@ -7,10 +7,10 @@
     shellAliases = lib.mkMerge [
       {
         cat = "bat";
-        ls = "eza --icons";
-        ll = "eza -la --icons --git";
-        la = "eza -la --icons";
-        tree = "eza --tree --icons";
+        ls = "eza --icons=auto";
+        ll = "eza -la --icons=auto --git";
+        la = "eza -la --icons=auto";
+        tree = "eza --tree --icons=auto";
         find = "fd";
         grep = "rg";
         top = "btop";
