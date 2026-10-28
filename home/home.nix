@@ -1,4 +1,4 @@
-{ config, pkgs, lib, inputs, ... }:
+{ config, pkgs, lib, inputs, osConfig, ... }:
 
 {
   imports = [
@@ -39,7 +39,13 @@
     yq-go
     presenterm
 
-    google-chrome
+    # Widevine (Netflix) video renders black under native Wayland on NVIDIA;
+    # XWayland composites it fine. Only needed on NVIDIA hosts.
+    (google-chrome.override {
+      commandLineArgs = lib.optionalString
+        (builtins.elem "nvidia" (osConfig.services.xserver.videoDrivers or [ ]))
+        "--ozone-platform=x11";
+    })
     kicad
 
     claude-code
@@ -91,13 +97,6 @@
     enable = true;
     nix-direnv.enable = true;
   };
-
-  home.file.".config/chrome-flags.conf".text = ''
-    --ozone-platform=wayland
-    --enable-features=VaapiVideoDecoder,VaapiVideoEncoder,VaapiVideoDecodeLinuxGL
-    --disable-features=UseChromeOSDirectVideoDecoder
-    --use-gl=egl
-  '';
 
   xdg = {
     enable = true;
