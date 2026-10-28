@@ -5,7 +5,18 @@
 
   programs.helix = {
     enable = true;
-    package = inputs.helix.packages.${pkgs.stdenv.hostPlatform.system}.helix;
+    package = inputs.helix.packages.${pkgs.stdenv.hostPlatform.system}.helix.override {
+      # glibc 2.44 turned bsearch into a _Generic macro; tree-sitter-perl defines its own bsearch and fails to compile
+      grammarOverlays = [
+        (final: prev: {
+          perl = prev.perl.overrideAttrs (old: {
+            postPatch = (old.postPatch or "") + ''
+              sed -i 's/\bbsearch(/tsp_bsearch(/g' src/bsearch.c src/tsp_unicode.h
+            '';
+          });
+        })
+      ];
+    };
     
     settings = {
       theme = "catppuccin_mocha";
